@@ -1,0 +1,20 @@
+name: Main
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  package:
+    name: Package
+    permissions:
+      contents: read
+    uses: project-graphite/actions/.github/workflows/reusable-package-release.yml@main
+
+  secrets:
+    name: Secrets
+    uses: project-graphite/actions/.github/workflows/reusable-gitleaks.yml@main

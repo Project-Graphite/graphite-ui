@@ -1,0 +1,26 @@
+name: PR
+
+on: pull_request
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  package:
+    name: Package
+    permissions:
+      contents: read
+    uses: project-graphite/actions/.github/workflows/reusable-package-release.yml@main
+
+  secrets:
+    name: Secrets
+    uses: project-graphite/actions/.github/workflows/reusable-gitleaks.yml@main
+
+  conventions:
+    name: Conventions
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+    uses: project-graphite/actions/.github/workflows/reusable-pr-checks.yml@main
