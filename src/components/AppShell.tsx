@@ -21,6 +21,7 @@ export function AppShell({
   children,
   footer,
   nav,
+  sidebar,
   tabs,
 }: {
   actions?: ReactNode;
@@ -29,6 +30,7 @@ export function AppShell({
   children: ReactNode;
   footer?: ReactNode;
   nav: ShellNavItem[];
+  sidebar?: ReactNode;
   tabs: ShellTab[];
 }) {
   const Link = useLink();
@@ -62,9 +64,18 @@ export function AppShell({
         </div>
         {alert}
       </header>
-      <main className="shell flex-1 py-8 sm:py-14" id="content">
-        {children}
-      </main>
+      {sidebar ? (
+        <div className="flex flex-1">
+          <aside className="sidebar-panel hidden md:block">{sidebar}</aside>
+          <main className="shell min-w-0 flex-1 py-8 sm:py-14" id="content">
+            {children}
+          </main>
+        </div>
+      ) : (
+        <main className="shell flex-1 py-8 sm:py-14" id="content">
+          {children}
+        </main>
+      )}
       {footer}
       <nav aria-label="Main" className="tab-bar md:hidden" style={{ '--tab-count': tabs.length } as CSSProperties}>
         {tabs.map((tab) =>

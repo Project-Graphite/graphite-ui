@@ -1,7 +1,10 @@
-import { StrictMode, useState, type ReactNode } from 'react';
+import { StrictMode, useCallback, useState, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
   AppShell,
+  Avatar,
+  CodeInput,
+  CommandPalette,
   ConfirmDialog,
   Dialog,
   EmptyState,
@@ -14,13 +17,19 @@ import {
   OutageGate,
   Pagination,
   Popover,
+  Sidebar,
   SmoothImage,
   SnackbarProvider,
+  Tabs,
+  TagChip,
+  tagColors,
   TextAreaField,
   TextField,
   Toggle,
   timeAgo,
+  useCommandShortcut,
   useSnackbar,
+  type CommandItem,
   type IconName,
 } from '../src/index.ts';
 import './styles.css';
@@ -38,7 +47,13 @@ const colors = [
   ['wip', 'bg-wip'],
   ['dormant', 'bg-dormant'],
 ];
-const icons: IconName[] = ['bell', 'compass', 'filter', 'gamepad', 'home', 'library', 'user'];
+const icons: IconName[] = ['bell', 'compass', 'filter', 'gamepad', 'home', 'library', 'search', 'user'];
+const commands: CommandItem[] = [
+  { group: 'Go to', href: '#workspace', id: 'notes', label: 'Notes', hint: 'g n' },
+  { group: 'Go to', href: '#workspace', id: 'agenda', label: 'Agenda', hint: 'g a' },
+  { group: 'Actions', id: 'task', label: 'New task', onSelect: () => {} },
+  { group: 'Actions', id: 'note', label: 'New note', onSelect: () => {} },
+];
 const outageListeners = new Set<() => void>();
 
 function Section({ children, title }: { children: ReactNode; title: string }) {
@@ -65,6 +80,10 @@ function SnackbarDemo() {
 
 function Preview() {
   const [dialog, setDialog] = useState<'plain' | 'confirm' | null>(null);
+  const [palette, setPalette] = useState(false);
+  const [query, setQuery] = useState('');
+  const openPalette = useCallback(() => setPalette(true), []);
+  useCommandShortcut(openPalette);
   const [checked, setChecked] = useState(true);
   const [page, setPage] = useState(3);
 
@@ -237,6 +256,60 @@ function Preview() {
           >
             <p className="m-0">Confirming shows the error state.</p>
           </ConfirmDialog>
+        )}
+      </Section>
+
+      <Section title="Workspace">
+        <Tabs
+          items={[
+            { active: true, href: '#workspace', label: 'Profile' },
+            { active: false, href: '#workspace', label: 'Security' },
+            { active: false, href: '#workspace', label: 'Sessions' },
+          ]}
+          label="Settings"
+        />
+        <div className="chip-row">
+          {tagColors.map((color) => (
+            <TagChip color={color} key={color} label={color} />
+          ))}
+          <TagChip color="blue" href="#workspace" label="linked" />
+          <TagChip color="green" label="removable" onRemove={() => {}} />
+        </div>
+        <div className="flex items-center gap-3">
+          <Avatar name="Amr" present />
+          <Avatar name="Sam" />
+          <Avatar name="Lee" present size="sm" />
+        </div>
+        <div className="max-w-xs">
+          <CodeInput hint="From your authenticator app." label="Six-digit code" name="code" />
+        </div>
+        <div className="h-72 max-w-60 overflow-hidden rounded-xl border border-line">
+          <Sidebar
+            label="Areas"
+            sections={[
+              {
+                items: [
+                  { active: true, href: '#workspace', icon: 'home', label: 'Home' },
+                  { active: false, badge: 4, href: '#workspace', icon: 'bell', label: 'Inbox' },
+                ],
+              },
+              { label: 'spaces', items: [{ active: false, href: '#workspace', label: 'Friends trip' }] },
+            ]}
+          />
+        </div>
+        <button className="secondary-button inline-flex w-fit" onClick={openPalette} type="button">
+          Open command palette (Ctrl+K)
+        </button>
+        {palette && (
+          <CommandPalette
+            items={commands.filter((command) => command.label.toLowerCase().includes(query.toLowerCase()))}
+            onClose={() => {
+              setPalette(false);
+              setQuery('');
+            }}
+            onQueryChange={setQuery}
+            query={query}
+          />
         )}
       </Section>
 
