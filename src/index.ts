@@ -1,4 +1,12 @@
 export { AppShell, type ShellNavItem, type ShellTab } from './components/AppShell.js';
+export { Avatar } from './components/Avatar.js';
+export { CodeInput } from './components/CodeInput.js';
+export {
+  CommandPalette,
+  useCommandShortcut,
+  type Command,
+  type CommandItem,
+} from './components/CommandPalette.js';
 export { ConfirmDialog } from './components/ConfirmDialog.js';
 export { Dialog } from './components/Dialog.js';
 export { EmptyState } from './components/EmptyState.js';
@@ -9,6 +17,7 @@ export { Menu, type MenuItem } from './components/Menu.js';
 export { OutageGate } from './components/OutageGate.js';
 export { Pagination } from './components/Pagination.js';
 export { Popover } from './components/Popover.js';
+export { Sidebar, type SidebarItem, type SidebarSection } from './components/Sidebar.js';
 export {
   actionSkeletonClass,
   FormPanelSkeleton,
@@ -22,6 +31,8 @@ export {
 } from './components/Skeleton.js';
 export { SmoothImage } from './components/SmoothImage.js';
 export { SnackbarProvider, useSnackbar } from './components/Snackbar.js';
+export { Tabs, type TabItem } from './components/Tabs.js';
+export { TagChip, tagColors, type TagColor } from './components/TagChip.js';
 export { Toggle } from './components/Toggle.js';
 export { errorMessage, isAbortError } from './lib/errors.js';
 export { timeAgo } from './lib/timeAgo.js';
