@@ -98,7 +98,10 @@ describe('Sidebar and AppShell', () => {
     const sidebar = container.querySelector('aside nav[aria-label="Areas"]')!;
     expect(sidebar.querySelector('[aria-current="page"]')?.textContent).toBe('Home');
     expect(sidebar.textContent).toContain('99+');
-    expect(container.querySelector('aside + main#content')?.textContent).toBe('Page');
+    const main = container.querySelector('aside + div > main#content')!;
+    expect(main.textContent).toBe('Page');
+    expect(main.classList.contains('shell')).toBe(true);
+    expect(main.classList.contains('flex-1')).toBe(false);
   });
 });
 
