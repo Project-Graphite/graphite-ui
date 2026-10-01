@@ -11,7 +11,7 @@ router: apps pass their own link component in through `UiProvider`.
 Install a release by URL. No registry account or token is needed:
 
 ```sh
-npm install --save-exact https://github.com/project-graphite/graphite-ui/releases/download/v0.1.0/project-graphite-ui-0.1.0.tgz
+npm install --save-exact https://github.com/project-graphite/graphite-ui/releases/download/v0.2.0/project-graphite-ui-0.2.0.tgz
 ```
 
 Load the theme after Tailwind. `@source` lets Tailwind see the classes the components use, and its
@@ -51,10 +51,14 @@ import { AppShell, Dialog, TextField, Toggle } from '@project-graphite/ui';
   - motion that only runs when reduced motion isn't requested;
   - the `shell`, `page-title`, `mono-sm` and `rule-link` utilities;
   - generic component classes such as `primary-button`, `tab-link`, `popover-panel` and `tab-bar`.
-- **Components**: `AppShell`, `Dialog`, `ConfirmDialog`, `TextField`, `TextAreaField`, `Toggle`,
-  `EmptyState`, `Pagination`, `SmoothImage`, the skeletons, `Popover`, `Menu`, `SnackbarProvider`,
-  `OutageGate`, `GridListbox` and `Icon`.
-- **Helpers**: `errorMessage`, `isAbortError`, `timeAgo` and `useDismiss`.
+- **Components**:
+  - layout: `AppShell` (with an optional `Sidebar`), `Tabs`;
+  - dialogs and popups: `Dialog`, `ConfirmDialog`, `CommandPalette`, `Popover`, `Menu`;
+  - forms: `TextField`, `TextAreaField`, `CodeInput`, `Toggle`, `GridListbox`;
+  - display: `TagChip`, `Avatar`, `EmptyState`, `Pagination`, `SmoothImage`, the skeletons, `Icon`;
+  - feedback: `SnackbarProvider`, `OutageGate`.
+- **Helpers**: `errorMessage`, `isAbortError`, `timeAgo`, `useDismiss`, and `useCommandShortcut`
+  (opens the command palette on Ctrl+K or Cmd+K).
 
 The phone layouts are built in. Dialogs become bottom sheets, and the tab bar and popovers account
 for the header and the safe area.
