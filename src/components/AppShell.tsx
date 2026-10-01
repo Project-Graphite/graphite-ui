@@ -67,9 +67,11 @@ export function AppShell({
       {sidebar ? (
         <div className="flex flex-1">
           <aside className="sidebar-panel hidden md:block">{sidebar}</aside>
-          <main className="shell min-w-0 flex-1 py-8 sm:py-14" id="content">
-            {children}
-          </main>
+          <div className="min-w-0 flex-1">
+            <main className="shell py-8 sm:py-14" id="content">
+              {children}
+            </main>
+          </div>
         </div>
       ) : (
         <main className="shell flex-1 py-8 sm:py-14" id="content">
