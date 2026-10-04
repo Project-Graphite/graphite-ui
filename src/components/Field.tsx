@@ -13,7 +13,9 @@ function FieldMessage({ error, hint, id }: { error?: string; hint?: ReactNode; i
     <span className="field-hint" id={`${id}-hint`}>
       {hint}
     </span>
-  ) : null;
+  ) : (
+    <span aria-hidden="true" className="field-slot" />
+  );
 }
 
 export function TextField({

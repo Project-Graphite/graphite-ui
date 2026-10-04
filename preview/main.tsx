@@ -8,6 +8,7 @@ import {
   ConfirmDialog,
   Dialog,
   EmptyState,
+  ErrorState,
   FormPanelSkeleton,
   GridListbox,
   Icon,
@@ -15,6 +16,7 @@ import {
   ListSkeleton,
   Menu,
   OutageGate,
+  PageHeader,
   Pagination,
   Popover,
   Sidebar,
@@ -242,14 +244,13 @@ function Preview() {
           </button>
         </div>
         {dialog === 'plain' && (
-          <Dialog eyebrow="preview" onClose={() => setDialog(null)} title="A plain dialog">
+          <Dialog onClose={() => setDialog(null)} title="A plain dialog">
             <p className="mt-4 text-muted">On a phone this opens as a bottom sheet.</p>
           </Dialog>
         )}
         {dialog === 'confirm' && (
           <ConfirmDialog
             confirmLabel="Delete"
-            eyebrow="preview"
             onClose={() => setDialog(null)}
             onConfirm={() => Promise.reject(new Error('This preview cannot delete anything.'))}
             title="Delete this note?"
@@ -293,7 +294,7 @@ function Preview() {
                   { active: false, badge: 4, href: '#workspace', icon: 'bell', label: 'Inbox' },
                 ],
               },
-              { label: 'spaces', items: [{ active: false, href: '#workspace', label: 'Friends trip' }] },
+              { label: 'Spaces', items: [{ active: false, href: '#workspace', label: 'Friends trip' }] },
             ]}
           />
         </div>
@@ -329,7 +330,23 @@ function Preview() {
         </div>
       </Section>
 
-      <Section title="Empty and loading">
+      <Section title="Page header">
+        <PageHeader
+          actions={
+            <button className="secondary-button px-3 py-2 text-sm" type="button">
+              <Icon name="plus" size={16} />
+              New
+            </button>
+          }
+          eyebrow="Shared space · owner"
+          title="Home"
+        />
+      </Section>
+
+      <Section title="Empty, error and loading">
+        <ErrorState onRetry={() => {}} title="This didn’t load">
+          The server answered with an error.
+        </ErrorState>
         <EmptyState title="Nothing here yet">
           <p className="mt-2 mb-0 text-muted">Empty states sit in a dashed box.</p>
         </EmptyState>
