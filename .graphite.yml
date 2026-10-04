@@ -10,5 +10,6 @@ projects:
     authors: [AmrMsCLL]
     status: wip
     listed: true
+    releases: manual
     deploy:
       kind: none
