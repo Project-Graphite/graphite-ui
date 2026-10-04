@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, type ReactNode } from 'react';
+import { Icon } from './Icon.js';
 
 export function Dialog({
   children,
@@ -7,7 +8,7 @@ export function Dialog({
   title,
 }: {
   children: ReactNode;
-  eyebrow: string;
+  eyebrow?: string;
   onClose: () => void;
   title: string;
 }) {
@@ -36,13 +37,13 @@ export function Dialog({
       <div className="p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:p-6">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
-            <p className="eyebrow">{eyebrow}</p>
-            <h2 className="mt-2 mb-0 text-2xl font-medium" id={titleId}>
+            {eyebrow && <p className="eyebrow mb-2">{eyebrow}</p>}
+            <h2 className="m-0 text-xl font-medium" id={titleId}>
               {title}
             </h2>
           </div>
-          <button aria-label="Close" className="text-button text-xl" onClick={onClose} type="button">
-            ×
+          <button aria-label="Close" className="icon-button -mt-1.5 -mr-2 shrink-0" onClick={onClose} type="button">
+            <Icon name="x" size={18} />
           </button>
         </div>
         {children}

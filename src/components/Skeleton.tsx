@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { useDelayed } from '../lib/useDelayed.js';
 
 export function Skeleton({ className = '' }: { className?: string }) {
   return <span aria-hidden="true" className={`skeleton ${className}`} />;
@@ -13,12 +14,15 @@ export function Placeholder({
   className?: string;
   label: string;
 }) {
+  const shown = useDelayed(placeholderDelayMs);
   return (
-    <div aria-busy="true" aria-label={label} className={className} role="status">
+    <div aria-busy="true" aria-label={label} className={`${className} ${shown ? 'placeholder-in' : 'invisible'}`} role="status">
       {children}
     </div>
   );
 }
+
+export const placeholderDelayMs = 200;
 
 export const actionSkeletonClass = 'h-[2.375rem] rounded-lg';
 

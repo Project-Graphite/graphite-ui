@@ -14,6 +14,7 @@ interface Snack {
   message: string;
   detail?: string;
   action?: { label: string; href: string };
+  tone?: 'error';
 }
 
 type ShowSnack = (snack: Omit<Snack, 'id'>) => void;
@@ -40,7 +41,8 @@ function SnackbarItem({ onDismiss, snack }: { onDismiss: (id: number) => void; s
 
   return (
     <div
-      className={`snackbar ${leaving ? 'snackbar-leaving' : ''}`}
+      className={`snackbar ${snack.tone === 'error' ? 'snackbar-error' : ''} ${leaving ? 'snackbar-leaving' : ''}`}
+      role={snack.tone === 'error' ? 'alert' : undefined}
       onAnimationEnd={(event) => {
         if (leaving && event.target === event.currentTarget) onDismiss(snack.id);
       }}
@@ -50,7 +52,7 @@ function SnackbarItem({ onDismiss, snack }: { onDismiss: (id: number) => void; s
       onMouseLeave={() => setPaused(false)}
     >
       <div className="min-w-0 flex-1">
-        <p className="m-0 truncate text-sm text-ink">{snack.message}</p>
+        <p className="m-0 text-sm text-ink">{snack.message}</p>
         {snack.detail && <p className="mono-sm m-0 mt-0.5 truncate text-faint">{snack.detail}</p>}
       </div>
       {snack.action && (

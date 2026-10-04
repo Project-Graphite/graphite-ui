@@ -18,7 +18,7 @@ export function ConfirmDialog({
   children: ReactNode;
   confirmLabel: string;
   errorFallback?: string;
-  eyebrow: string;
+  eyebrow?: string;
   onClose: () => void;
   onConfirm: () => Promise<void>;
   title: string;
