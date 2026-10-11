@@ -17,6 +17,7 @@ export { TextAreaField, TextField } from './components/Field.js';
 export { GridListbox, type GridGroup } from './components/GridListbox.js';
 export { Icon, type IconName } from './components/Icon.js';
 export { Menu, type MenuItem } from './components/Menu.js';
+export { Meter } from './components/Meter.js';
 export { OutageGate } from './components/OutageGate.js';
 export { PageHeader } from './components/PageHeader.js';
 export { Pagination } from './components/Pagination.js';

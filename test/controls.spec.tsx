@@ -1,6 +1,6 @@
 import { act } from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import { ColorSwatches, DatePicker, Select, SuggestField, TimePicker, useSettled } from '../src/index.ts';
+import { ColorSwatches, DatePicker, Meter, Select, SuggestField, TimePicker, useSettled } from '../src/index.ts';
 import { click, press, render } from './render.tsx';
 
 const fruit = [
@@ -203,5 +203,21 @@ describe('SuggestField', () => {
     expect(document.querySelector('[role="listbox"]')).toBeNull();
     await type(input, 'kiwi');
     expect(input.getAttribute('aria-expanded')).toBe('false');
+  });
+});
+
+describe('Meter', () => {
+  it('reports progress as a percentage, fills to the edge at most and marks going over', async () => {
+    const { container, rerender } = await render(<Meter label="Garden goal" value={0.42} />);
+    const meter = container.querySelector('[role="progressbar"]')!;
+    expect(meter.getAttribute('aria-label')).toBe('Garden goal');
+    expect(meter.getAttribute('aria-valuenow')).toBe('42');
+    expect(meter.querySelector<HTMLElement>('.meter-fill')!.style.width).toBe('42%');
+    expect(meter.hasAttribute('data-over')).toBe(false);
+
+    await rerender(<Meter label="Garden goal" value={1.3} />);
+    expect(meter.getAttribute('aria-valuenow')).toBe('130');
+    expect(meter.querySelector<HTMLElement>('.meter-fill')!.style.width).toBe('100%');
+    expect(meter.hasAttribute('data-over')).toBe(true);
   });
 });
