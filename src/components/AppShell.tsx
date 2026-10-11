@@ -70,8 +70,8 @@ export function AppShell({
         <a className="skip-link" href="#content">
           skip to content
         </a>
-        <header className="sticky top-0 z-20 border-b border-line-soft bg-paper/90 backdrop-blur-md">
-          <div className={sidebar ? 'shell-bar flex h-16 items-center gap-2' : 'shell flex h-16 items-center gap-6'}>
+        <header className="sticky top-0 z-20 h-(--header-height) border-b border-line-soft bg-paper/90 backdrop-blur-md">
+          <div className={sidebar ? 'shell-bar flex h-full items-center gap-2' : 'shell flex h-full items-center gap-6'}>
             {sidebar && (
               <button
                 aria-controls="app-sidebar"
