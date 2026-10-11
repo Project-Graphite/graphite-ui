@@ -113,18 +113,21 @@ export function AppShell({
             <aside className="sidebar-panel hidden md:block" data-collapsed={collapsed} id="app-sidebar">
               {sidebar}
             </aside>
-            <div className="min-w-0 flex-1">
+            <div className="flex min-w-0 flex-1 flex-col justify-between">
               <main className="shell py-8 sm:py-14" id="content">
                 {children}
               </main>
+              {footer}
             </div>
           </div>
         ) : (
-          <main className="shell flex-1 py-8 sm:py-14" id="content">
-            {children}
-          </main>
+          <>
+            <main className="shell flex-1 py-8 sm:py-14" id="content">
+              {children}
+            </main>
+            {footer}
+          </>
         )}
-        {footer}
         <nav aria-label="Main" className="tab-bar md:hidden" style={{ '--tab-count': tabs.length } as CSSProperties}>
           {tabs.map((tab) =>
             tab.loading ? (

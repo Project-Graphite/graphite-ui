@@ -4,8 +4,10 @@ import {
   AppShell,
   Avatar,
   CodeInput,
+  ColorSwatches,
   CommandPalette,
   ConfirmDialog,
+  DatePicker,
   Dialog,
   EmptyState,
   ErrorState,
@@ -20,6 +22,8 @@ import {
   Pagination,
   Popover,
   Sidebar,
+  Select,
+  SuggestField,
   SmoothImage,
   SnackbarProvider,
   Tabs,
@@ -27,6 +31,7 @@ import {
   tagColors,
   TextAreaField,
   TextField,
+  TimePicker,
   Toggle,
   timeAgo,
   useCommandShortcut,
@@ -210,13 +215,35 @@ function Preview() {
           <TextField hint="At least 12 characters." label="Password" type="password" />
           <TextField error="Enter a handle." label="Handle" />
           <TextAreaField label="Bio" rows={3} />
-          <label className="field-label">
-            Category
-            <select defaultValue="notes">
-              <option value="notes">Notes</option>
-              <option value="tasks">Tasks</option>
-            </select>
-          </label>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <TextField label="Name" placeholder="Garden" />
+            <Select
+              defaultValue="notes"
+              label="Category"
+              options={[
+                { value: 'notes', label: 'Notes' },
+                { value: 'tasks', label: 'Tasks' },
+                { value: 'events', label: 'Events' },
+              ]}
+            />
+          </div>
+          <Select
+            label="Time zone"
+            options={Intl.supportedValuesOf('timeZone').map((zone) => ({ value: zone, label: zone.replaceAll('_', ' ') }))}
+            placeholder="Choose a time zone"
+            searchable
+          />
+          <SuggestField hint="Try “ne”." label="Service" suggestions={['Netflix', 'Nebula', 'Spotify', 'YouTube Premium']} />
+          <div className="grid gap-4 sm:grid-cols-2">
+            <DatePicker defaultValue="2026-10-14" label="Due date" />
+            <TimePicker defaultValue="09:00" label="Time" />
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <Select aria-label="Group by" defaultValue="status" options={[{ value: 'status', label: 'Status' }, { value: 'owner', label: 'Owner' }]} size="small" />
+            <DatePicker aria-label="Due" quiet size="small" />
+            <TimePicker aria-label="At" quiet size="small" />
+          </div>
+          <ColorSwatches defaultValue="teal" label="Colour" name="color" />
           <GridListbox
             defaultValue=""
             emptyLabel="Any year"
@@ -228,7 +255,14 @@ function Preview() {
             name="year"
           />
           <Toggle checked={checked} description="Shown on your profile." label="Public profile" onChange={setChecked} />
-          <Toggle checked={false} disabled label="Disabled toggle" onChange={() => {}} />
+          <div className="panel-rows">
+            <Toggle checked={checked} description="Grouped toggles share one frame." label="Weekly summary" onChange={setChecked} />
+            <Toggle checked={false} disabled label="Disabled toggle" onChange={() => {}} />
+          </div>
+          <ul className="panel-rows">
+            <li className="panel-row">A framed list row</li>
+            <li className="panel-row">Rows share one padding</li>
+          </ul>
           <p className="notice m-0">A notice explains something calmly.</p>
           <p className="error-message m-0">Something went wrong. Try again.</p>
         </div>

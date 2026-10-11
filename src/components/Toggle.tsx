@@ -16,7 +16,7 @@ export function Toggle({
   const labelId = useId();
   return (
     <div
-      className={`flex items-start justify-between gap-4 rounded-xl border border-line bg-surface p-4 ${disabled ? 'opacity-55' : ''}`}
+      className={`toggle-row ${disabled ? 'opacity-55' : ''}`}
     >
       <span>
         <span className="block font-medium" id={labelId}>
