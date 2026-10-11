@@ -1,6 +1,7 @@
 export { AppShell, useShell, type ShellNavItem, type ShellTab } from './components/AppShell.js';
 export { Avatar } from './components/Avatar.js';
 export { CodeInput } from './components/CodeInput.js';
+export { ColorSwatches } from './components/ColorSwatches.js';
 export {
   CommandPalette,
   useCommandShortcut,
@@ -8,6 +9,7 @@ export {
   type CommandItem,
 } from './components/CommandPalette.js';
 export { ConfirmDialog } from './components/ConfirmDialog.js';
+export { DatePicker, formatDay } from './components/DatePicker.js';
 export { Dialog } from './components/Dialog.js';
 export { EmptyState } from './components/EmptyState.js';
 export { ErrorState } from './components/ErrorState.js';
@@ -28,17 +30,19 @@ export {
   ListSkeleton,
   PageSkeleton,
   Placeholder,
-  placeholderDelayMs,
   Skeleton,
   TabsSkeleton,
 } from './components/Skeleton.js';
+export { Select, type SelectOption } from './components/Select.js';
 export { SmoothImage } from './components/SmoothImage.js';
 export { SnackbarProvider, useSnackbar } from './components/Snackbar.js';
 export { Tabs, type TabItem } from './components/Tabs.js';
 export { TagChip, tagColors, type TagColor } from './components/TagChip.js';
+export { TimePicker } from './components/TimePicker.js';
 export { Toggle } from './components/Toggle.js';
 export { errorMessage, isAbortError } from './lib/errors.js';
 export { timeAgo } from './lib/timeAgo.js';
 export { useDelayed } from './lib/useDelayed.js';
 export { useDismiss } from './lib/useDismiss.js';
+export { placeholderDelayMs, placeholderMinimumMs, useSettled } from './lib/useSettled.js';
 export { UiProvider, useLink, type UiLinkProps } from './UiProvider.js';

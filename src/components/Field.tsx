@@ -1,10 +1,10 @@
 import { useId, type InputHTMLAttributes, type ReactNode, type TextareaHTMLAttributes } from 'react';
 
-function describedBy(id: string, error?: string, hint?: ReactNode) {
+export function describedBy(id: string, error?: string, hint?: ReactNode) {
   return error ? `${id}-error` : hint ? `${id}-hint` : undefined;
 }
 
-function FieldMessage({ error, hint, id }: { error?: string; hint?: ReactNode; id: string }) {
+export function FieldMessage({ error, hint, id }: { error?: string; hint?: ReactNode; id: string }) {
   return error ? (
     <span className="field-error" id={`${id}-error`}>
       {error}

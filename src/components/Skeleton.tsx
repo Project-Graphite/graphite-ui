@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { useDelayed } from '../lib/useDelayed.js';
+import { placeholderDelayMs } from '../lib/useSettled.js';
 
 export function Skeleton({ className = '' }: { className?: string }) {
   return <span aria-hidden="true" className={`skeleton ${className}`} />;
@@ -22,7 +23,6 @@ export function Placeholder({
   );
 }
 
-export const placeholderDelayMs = 200;
 
 export const actionSkeletonClass = 'h-[2.375rem] rounded-lg';
 
