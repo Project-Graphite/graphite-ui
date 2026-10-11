@@ -238,6 +238,11 @@ function Preview() {
             <DatePicker defaultValue="2026-10-14" label="Due date" />
             <TimePicker defaultValue="09:00" label="Time" />
           </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <Select aria-label="Group by" defaultValue="status" options={[{ value: 'status', label: 'Status' }, { value: 'owner', label: 'Owner' }]} size="small" />
+            <DatePicker aria-label="Due" quiet size="small" />
+            <TimePicker aria-label="At" quiet size="small" />
+          </div>
           <ColorSwatches defaultValue="teal" label="Colour" name="color" />
           <GridListbox
             defaultValue=""

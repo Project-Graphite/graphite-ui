@@ -1,5 +1,14 @@
 import { useId, type InputHTMLAttributes, type ReactNode, type TextareaHTMLAttributes } from 'react';
 
+export interface TriggerLook {
+  quiet?: boolean;
+  size?: 'default' | 'small';
+}
+
+export function triggerClass({ quiet = false, size = 'default' }: TriggerLook) {
+  return `select-trigger field-control${size === 'small' ? ' select-trigger-small' : ''}${quiet ? ' select-trigger-quiet' : ''}`;
+}
+
 export function describedBy(id: string, error?: string, hint?: ReactNode) {
   return error ? `${id}-error` : hint ? `${id}-hint` : undefined;
 }

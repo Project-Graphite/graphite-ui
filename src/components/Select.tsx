@@ -1,6 +1,6 @@
 import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
 import { useAnchoredPanel } from '../lib/useAnchoredPanel.js';
-import { describedBy, FieldMessage } from './Field.js';
+import { describedBy, FieldMessage, triggerClass, type TriggerLook } from './Field.js';
 import { Icon } from './Icon.js';
 
 export interface SelectOption<T extends string = string> {
@@ -22,9 +22,11 @@ export function Select<T extends string = string>({
   onChange,
   options,
   placeholder = 'Choose…',
+  quiet,
   searchable = false,
+  size,
   value,
-}: {
+}: TriggerLook & {
   'aria-label'?: string;
   className?: string;
   defaultValue?: T | '';
@@ -127,7 +129,7 @@ export function Select<T extends string = string>({
         aria-invalid={error ? true : undefined}
         aria-label={ariaLabel}
         aria-labelledby={label ? `${id}-label` : undefined}
-        className="select-trigger field-control"
+        className={triggerClass({ quiet, size })}
         disabled={disabled}
         onClick={() => (open ? close() : show())}
         onKeyDown={(event) => {

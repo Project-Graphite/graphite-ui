@@ -1,4 +1,5 @@
 import { useMemo, type ReactNode } from 'react';
+import type { TriggerLook } from './Field.js';
 import { Select, type SelectOption } from './Select.js';
 
 function times(step: number) {
@@ -20,9 +21,11 @@ export function TimePicker({
   name,
   onChange,
   optional = true,
+  quiet,
+  size,
   step = 15,
   value,
-}: {
+}: TriggerLook & {
   'aria-label'?: string;
   className?: string;
   defaultValue?: string;
@@ -57,7 +60,9 @@ export function TimePicker({
       onChange={onChange}
       options={options}
       placeholder={emptyLabel}
+      quiet={quiet}
       searchable
+      size={size}
       value={value}
     />
   );

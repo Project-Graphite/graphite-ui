@@ -1,6 +1,6 @@
 import { useEffect, useId, useLayoutEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
 import { useAnchoredPanel } from '../lib/useAnchoredPanel.js';
-import { describedBy, FieldMessage } from './Field.js';
+import { describedBy, FieldMessage, triggerClass, type TriggerLook } from './Field.js';
 import { Icon } from './Icon.js';
 
 const dayMs = 86_400_000;
@@ -37,9 +37,11 @@ export function DatePicker({
   onChange,
   optional = true,
   placeholder = 'Choose a date',
+  quiet,
+  size,
   value,
   weekStartsOn = 1,
-}: {
+}: TriggerLook & {
   'aria-label'?: string;
   className?: string;
   defaultValue?: string;
@@ -121,7 +123,7 @@ export function DatePicker({
         aria-invalid={error ? true : undefined}
         aria-label={ariaLabel}
         aria-labelledby={label ? `${id}-label ${id}-value` : undefined}
-        className="select-trigger field-control"
+        className={triggerClass({ quiet, size })}
         disabled={disabled}
         onClick={() => (open ? close() : show())}
         ref={trigger}
