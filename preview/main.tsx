@@ -17,6 +17,7 @@ import {
   LinesSkeleton,
   ListSkeleton,
   Menu,
+  Meter,
   OutageGate,
   PageHeader,
   Pagination,
@@ -267,6 +268,10 @@ function Preview() {
             <summary className="text-ink">A disclosure</summary>
             <p className="mt-2 mb-0 text-sm text-muted">It opens with the same chevron as the rest of the interface.</p>
           </details>
+          <div className="grid gap-2">
+            <Meter label="Half way" value={0.5} />
+            <Meter label="Over budget" value={1.2} />
+          </div>
           <p className="notice m-0">A notice explains something calmly.</p>
           <p className="error-message m-0">Something went wrong. Try again.</p>
         </div>
