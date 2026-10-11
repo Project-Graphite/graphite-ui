@@ -113,8 +113,8 @@ export function AppShell({
             <aside className="sidebar-panel hidden md:block" data-collapsed={collapsed} id="app-sidebar">
               {sidebar}
             </aside>
-            <div className="flex min-w-0 flex-1 flex-col">
-              <main className="shell flex-1 py-8 sm:py-14" id="content">
+            <div className="flex min-w-0 flex-1 flex-col justify-between">
+              <main className="shell py-8 sm:py-14" id="content">
                 {children}
               </main>
               {footer}
