@@ -263,6 +263,10 @@ function Preview() {
             <li className="panel-row">A framed list row</li>
             <li className="panel-row">Rows share one padding</li>
           </ul>
+          <details className="rounded-lg border border-line p-3">
+            <summary className="text-ink">A disclosure</summary>
+            <p className="mt-2 mb-0 text-sm text-muted">It opens with the same chevron as the rest of the interface.</p>
+          </details>
           <p className="notice m-0">A notice explains something calmly.</p>
           <p className="error-message m-0">Something went wrong. Try again.</p>
         </div>

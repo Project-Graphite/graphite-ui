@@ -1,3 +1,4 @@
+import { act } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { Menu, Popover } from '../src/index.ts';
 import { click, press, render } from './render.tsx';
@@ -32,6 +33,29 @@ describe('Menu', () => {
     expect(document.activeElement?.textContent).toBe('Your profile');
     await press(menu, 'End');
     expect(document.activeElement?.textContent).toBe('Sign out');
+  });
+
+  it('opens from a pointer click without highlighting an item, and arrows start at the first', async () => {
+    const view = await render(
+      <Menu
+        items={[
+          { label: 'Rename', onSelect: vi.fn() },
+          { label: 'Delete', onSelect: vi.fn() },
+        ]}
+        label="Actions"
+        trigger="..."
+        triggerLabel="Actions for Garden"
+      />,
+    );
+    const trigger = view.container.querySelector('button[aria-haspopup="menu"]')!;
+    await act(async () => {
+      trigger.dispatchEvent(new MouseEvent('click', { bubbles: true, detail: 1 }));
+    });
+    const menu = view.container.querySelector('[role="menu"]')!;
+
+    expect(document.activeElement).toBe(menu);
+    await press(menu, 'ArrowDown');
+    expect(document.activeElement?.textContent).toBe('Rename');
   });
 
   it('closes with Escape and returns focus to the trigger', async () => {

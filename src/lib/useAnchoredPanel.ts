@@ -4,7 +4,7 @@ import { useDismiss } from './useDismiss.js';
 const gap = 6;
 const margin = 8;
 
-export function useAnchoredPanel<Trigger extends HTMLElement, Panel extends HTMLElement>(minWidth = 0) {
+export function useAnchoredPanel<Trigger extends HTMLElement, Panel extends HTMLElement>(minWidth = 0, align: 'start' | 'end' = 'start') {
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLDivElement>(null);
   const trigger = useRef<Trigger>(null);
@@ -17,7 +17,7 @@ export function useAnchoredPanel<Trigger extends HTMLElement, Panel extends HTML
     const element = panel.current;
     if (!anchor || !element) return;
     const width = Math.min(Math.max(anchor.width, minWidth), window.innerWidth - margin * 2);
-    const left = Math.min(Math.max(anchor.left, margin), window.innerWidth - width - margin);
+    const left = Math.min(Math.max(align === 'end' ? anchor.right - width : anchor.left, margin), window.innerWidth - width - margin);
     const below = window.innerHeight - anchor.bottom - gap - margin;
     const above = anchor.top - gap - margin;
     const height = element.scrollHeight;
@@ -27,7 +27,7 @@ export function useAnchoredPanel<Trigger extends HTMLElement, Panel extends HTML
     element.style.maxHeight = `${Math.max(upwards ? above : below, 160)}px`;
     element.style.top = upwards ? '' : `${anchor.bottom + gap}px`;
     element.style.bottom = upwards ? `${window.innerHeight - anchor.top + gap}px` : '';
-  }, [minWidth]);
+  }, [align, minWidth]);
 
   useLayoutEffect(() => {
     const element = panel.current;

@@ -11,7 +11,7 @@ router: apps pass their own link component in through `UiProvider`.
 Install a release by URL. No registry account or token is needed:
 
 ```sh
-npm install --save-exact https://github.com/project-graphite/graphite-ui/releases/download/v0.4.1/project-graphite-ui-0.4.1.tgz
+npm install --save-exact https://github.com/project-graphite/graphite-ui/releases/download/v0.4.2/project-graphite-ui-0.4.2.tgz
 ```
 
 Load the theme after Tailwind. `@source` lets Tailwind see the classes the components use, and its

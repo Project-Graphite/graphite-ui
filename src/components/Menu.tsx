@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
-import { useDismiss } from '../lib/useDismiss.js';
+import { useLayoutEffect, useRef, type KeyboardEvent, type ReactNode } from 'react';
+import { useAnchoredPanel } from '../lib/useAnchoredPanel.js';
 import { useLink } from '../UiProvider.js';
 
 export type MenuItem = { label: string; separated?: boolean } & (
@@ -23,16 +23,14 @@ export function Menu({
   triggerLabel: string;
 }) {
   const Link = useLink();
-  const [open, setOpen] = useState(false);
-  const root = useRef<HTMLDivElement>(null);
-  const button = useRef<HTMLButtonElement>(null);
-  const panel = useRef<HTMLDivElement>(null);
-  const close = useCallback(() => setOpen(false), []);
-  useDismiss(open, root, close);
+  const { close, open, panel, root, setOpen, trigger: button } = useAnchoredPanel<HTMLButtonElement, HTMLDivElement>(240, 'end');
+  const openedFromKeyboard = useRef(false);
 
-  useEffect(() => {
-    if (open) panel.current?.querySelector<HTMLElement>('[role="menuitem"]')?.focus();
-  }, [open]);
+  useLayoutEffect(() => {
+    if (!open) return;
+    const first = panel.current?.querySelector<HTMLElement>('[role="menuitem"]');
+    (openedFromKeyboard.current ? first : panel.current)?.focus({ preventScroll: true });
+  }, [open, panel]);
 
   function move(event: KeyboardEvent<HTMLDivElement>) {
     const options = [...(panel.current?.querySelectorAll<HTMLElement>('[role="menuitem"]') ?? [])];
@@ -62,14 +60,17 @@ export function Menu({
         aria-haspopup="menu"
         aria-label={triggerLabel}
         className={triggerClassName}
-        onClick={() => setOpen((current) => !current)}
+        onClick={(event) => {
+          openedFromKeyboard.current = event.detail === 0;
+          setOpen((current) => !current);
+        }}
         ref={button}
         type="button"
       >
         {trigger}
       </button>
       {open && (
-        <div aria-label={label} className="popover-panel menu-panel" onKeyDown={move} ref={panel} role="menu">
+        <div aria-label={label} className="popover-panel menu-panel" onKeyDown={move} popover="manual" ref={panel} role="menu" tabIndex={-1}>
           {header}
           {items.map((item) => {
             const className = `menu-item ${item.separated ? 'border-t border-line' : ''}`;
