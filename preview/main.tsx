@@ -23,6 +23,7 @@ import {
   Popover,
   Sidebar,
   Select,
+  SuggestField,
   SmoothImage,
   SnackbarProvider,
   Tabs,
@@ -232,6 +233,7 @@ function Preview() {
             placeholder="Choose a time zone"
             searchable
           />
+          <SuggestField hint="Try “ne”." label="Service" suggestions={['Netflix', 'Nebula', 'Spotify', 'YouTube Premium']} />
           <div className="grid gap-4 sm:grid-cols-2">
             <DatePicker defaultValue="2026-10-14" label="Due date" />
             <TimePicker defaultValue="09:00" label="Time" />

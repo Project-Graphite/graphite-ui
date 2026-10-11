@@ -702,7 +702,12 @@ body {
   }
 
   .listbox-hint {
-    flex: none;
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: 60%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     color: var(--color-faint);
     font-family: var(--font-mono);
     font-size: 0.75rem;

@@ -34,6 +34,7 @@ export {
   TabsSkeleton,
 } from './components/Skeleton.js';
 export { Select, type SelectOption } from './components/Select.js';
+export { SuggestField } from './components/SuggestField.js';
 export { SmoothImage } from './components/SmoothImage.js';
 export { SnackbarProvider, useSnackbar } from './components/Snackbar.js';
 export { Tabs, type TabItem } from './components/Tabs.js';

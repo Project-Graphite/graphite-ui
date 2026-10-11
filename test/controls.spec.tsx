@@ -1,6 +1,6 @@
 import { act } from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import { ColorSwatches, DatePicker, Select, TimePicker, useSettled } from '../src/index.ts';
+import { ColorSwatches, DatePicker, Select, SuggestField, TimePicker, useSettled } from '../src/index.ts';
 import { click, press, render } from './render.tsx';
 
 const fruit = [
@@ -165,5 +165,43 @@ describe('useSettled', () => {
     await act(async () => vi.advanceTimersByTime(400));
     expect(slow.container.textContent).toBe('ready');
     vi.useRealTimers();
+  });
+});
+
+describe('SuggestField', () => {
+  async function type(input: HTMLInputElement, text: string) {
+    await act(async () => {
+      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(input, text);
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  }
+
+  it('suggests matches while typing and fills in the picked one', async () => {
+    const onPick = vi.fn();
+    const { container } = await render(
+      <form>
+        <SuggestField label="Service" name="service" onPick={onPick} suggestions={['Netflix', 'Spotify', 'Nebula']} />
+      </form>,
+    );
+    const input = container.querySelector<HTMLInputElement>('input[role="combobox"]')!;
+    expect(input.labels?.[0]?.textContent).toBe('Service');
+
+    await type(input, 'ne');
+    expect(input.getAttribute('aria-expanded')).toBe('true');
+    expect(options()).toEqual(['Netflix', 'Nebula']);
+
+    await press(input, 'ArrowDown');
+    expect(input.getAttribute('aria-activedescendant')).toBe(document.querySelector('[data-active="true"]')!.id);
+    await press(input, 'Enter');
+    expect(onPick).toHaveBeenCalledWith('Nebula');
+    expect(input.value).toBe('Nebula');
+    expect(document.querySelector('[role="listbox"]')).toBeNull();
+    expect(new FormData(container.querySelector('form')!).get('service')).toBe('Nebula');
+
+    await type(input, 'spo');
+    await press(input, 'Escape');
+    expect(document.querySelector('[role="listbox"]')).toBeNull();
+    await type(input, 'kiwi');
+    expect(input.getAttribute('aria-expanded')).toBe('false');
   });
 });
