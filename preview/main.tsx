@@ -259,6 +259,10 @@ function Preview() {
             <Toggle checked={checked} description="Grouped toggles share one frame." label="Weekly summary" onChange={setChecked} />
             <Toggle checked={false} disabled label="Disabled toggle" onChange={() => {}} />
           </div>
+          <ul className="panel-rows">
+            <li className="panel-row">A framed list row</li>
+            <li className="panel-row">Rows share one padding</li>
+          </ul>
           <p className="notice m-0">A notice explains something calmly.</p>
           <p className="error-message m-0">Something went wrong. Try again.</p>
         </div>
