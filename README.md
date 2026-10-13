@@ -52,13 +52,16 @@ import { AppShell, Dialog, TextField, Toggle } from '@project-graphite/ui';
   - the `shell`, `page-title`, `mono-sm` and `rule-link` utilities;
   - generic component classes such as `primary-button`, `tab-link`, `popover-panel` and `tab-bar`.
 - **Components**:
-  - layout: `AppShell` (with an optional `Sidebar`), `Tabs`;
+  - layout: `AppShell` (with an optional `Sidebar` and `useShell`), `PageHeader`, `Tabs`;
   - dialogs and popups: `Dialog`, `ConfirmDialog`, `CommandPalette`, `Popover`, `Menu`;
-  - forms: `TextField`, `TextAreaField`, `CodeInput`, `Toggle`, `GridListbox`;
-  - display: `TagChip`, `Avatar`, `EmptyState`, `Pagination`, `SmoothImage`, the skeletons, `Icon`;
-  - feedback: `SnackbarProvider`, `OutageGate`.
-- **Helpers**: `errorMessage`, `isAbortError`, `timeAgo`, `useDismiss`, and `useCommandShortcut`
-  (opens the command palette on Ctrl+K or Cmd+K).
+  - forms: `TextField`, `TextAreaField`, `SuggestField`, `Select`, `DatePicker`, `TimePicker`,
+    `CodeInput`, `Toggle`, `ColorSwatches`, `GridListbox`;
+  - display: `TagChip` (with `tagColors`), `Avatar`, `Meter`, `EmptyState`, `ErrorState`,
+    `Pagination`, `SmoothImage`, the skeletons and `Placeholder`, `Icon`;
+  - feedback: `SnackbarProvider` (with `useSnackbar`), `OutageGate`.
+- **Helpers**: `errorMessage`, `isAbortError`, `timeAgo`, `formatDay`, `useDismiss`, `useDelayed`,
+  `useSettled` (with `placeholderDelayMs` and `placeholderMinimumMs`), `useLink`, and
+  `useCommandShortcut` (opens the command palette on Ctrl+K or Cmd+K).
 
 The phone layouts are built in. Dialogs become bottom sheets, and the tab bar and popovers account
 for the header and the safe area.
