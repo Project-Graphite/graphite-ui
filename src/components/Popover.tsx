@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { useAnchoredPanel } from '../lib/useAnchoredPanel.js';
 
 export function Popover({
+  align = 'end',
   children,
   label,
   panelClassName = 'popover-list',
@@ -9,6 +10,7 @@ export function Popover({
   triggerClassName = 'icon-button',
   triggerLabel,
 }: {
+  align?: 'start' | 'end';
   children: (close: () => void) => ReactNode;
   label: string;
   panelClassName?: string;
@@ -16,7 +18,7 @@ export function Popover({
   triggerClassName?: string;
   triggerLabel: string;
 }) {
-  const { close, open, panel, root, setOpen, trigger: button } = useAnchoredPanel<HTMLButtonElement, HTMLDivElement>('auto', 'end');
+  const { close, open, panel, root, setOpen, trigger: button } = useAnchoredPanel<HTMLButtonElement, HTMLDivElement>('auto', align);
 
   return (
     <div
