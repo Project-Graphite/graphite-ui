@@ -1,5 +1,5 @@
-import { useCallback, useRef, useState, type ReactNode } from 'react';
-import { useDismiss } from '../lib/useDismiss.js';
+import type { ReactNode } from 'react';
+import { useAnchoredPanel } from '../lib/useAnchoredPanel.js';
 
 export function Popover({
   children,
@@ -16,11 +16,7 @@ export function Popover({
   triggerClassName?: string;
   triggerLabel: string;
 }) {
-  const [open, setOpen] = useState(false);
-  const root = useRef<HTMLDivElement>(null);
-  const button = useRef<HTMLButtonElement>(null);
-  const close = useCallback(() => setOpen(false), []);
-  useDismiss(open, root, close);
+  const { close, open, panel, root, setOpen, trigger: button } = useAnchoredPanel<HTMLButtonElement, HTMLDivElement>('auto', 'end');
 
   return (
     <div
@@ -42,7 +38,7 @@ export function Popover({
         {trigger}
       </button>
       {open && (
-        <div aria-label={label} className={`popover-panel ${panelClassName}`} role="dialog">
+        <div aria-label={label} className={`popover-panel anchored-panel ${panelClassName}`} popover="manual" ref={panel} role="dialog">
           {children(close)}
         </div>
       )}

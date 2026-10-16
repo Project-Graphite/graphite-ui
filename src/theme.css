@@ -302,7 +302,8 @@ body {
   }
 
   .primary-button,
-  .secondary-button {
+  .secondary-button,
+  .danger-button {
     display: inline-flex;
     gap: 0.5rem;
     align-items: center;
@@ -339,8 +340,19 @@ body {
     background: var(--color-line-soft);
   }
 
+  .danger-button {
+    border: 1px solid var(--color-danger);
+    background: var(--color-danger);
+    color: var(--color-paper);
+  }
+
+  .danger-button:hover {
+    background: color-mix(in srgb, var(--color-danger) 80%, #fff);
+  }
+
   .primary-button:disabled,
-  .secondary-button:disabled {
+  .secondary-button:disabled,
+  .danger-button:disabled {
     cursor: not-allowed;
     opacity: 0.55;
   }
@@ -710,12 +722,18 @@ body {
   }
 
   .listbox-panel,
-  .date-panel {
+  .date-panel,
+  .anchored-panel {
     position: fixed;
     inset: auto;
     margin: 0;
     color: var(--color-ink);
     animation: popover-enter 140ms var(--ease-settle);
+  }
+
+  .anchored-panel {
+    max-width: calc(100vw - 1rem);
+    padding: 0;
   }
 
   .listbox-panel {
@@ -1033,9 +1051,6 @@ body {
   }
 
   .popover-list {
-    position: absolute;
-    top: calc(100% + 0.6rem);
-    right: 0;
     width: 23rem;
     overflow: hidden;
     font-family: var(--font-sans);
@@ -1112,16 +1127,6 @@ body {
     }
   }
 
-  @media (max-width: 39.99rem) {
-    .popover-list {
-      position: fixed;
-      top: calc(var(--header-height) + 0.25rem);
-      right: 0.75rem;
-      left: 0.75rem;
-      width: auto;
-    }
-  }
-
   .scroll-x {
     overflow-x: auto;
     overscroll-behavior-inline: contain;
@@ -1130,6 +1135,20 @@ body {
 
   .scroll-x::-webkit-scrollbar {
     display: none;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    .scroll-x {
+      mask-image: linear-gradient(
+        to right,
+        transparent,
+        #000 var(--scroll-x-start),
+        #000 calc(100% - var(--scroll-x-end)),
+        transparent
+      );
+      animation: scroll-x-fade linear both;
+      animation-timeline: scroll(self inline);
+    }
   }
 
   .chip-row {
@@ -1181,6 +1200,24 @@ body {
     background: var(--color-line);
   }
 
+  @media (pointer: coarse) {
+    .text-button,
+    .avatar-button {
+      position: relative;
+    }
+
+    .text-button::after,
+    .avatar-button::after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: max(100%, 2.75rem);
+      height: max(100%, 2.75rem);
+      transform: translate(-50%, -50%);
+      content: '';
+    }
+  }
+
   .menu-panel {
     position: fixed;
     inset: auto;
@@ -1226,7 +1263,7 @@ body {
     grid-template-columns: repeat(var(--tab-count, 5), minmax(0, 1fr));
     border-top: 1px solid var(--color-line-soft);
     background: color-mix(in srgb, var(--color-paper) 92%, transparent);
-    padding-bottom: env(safe-area-inset-bottom);
+    padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
     backdrop-filter: blur(14px);
   }
 
@@ -1242,8 +1279,19 @@ body {
     transition: color 160ms ease;
   }
 
+  .tab-bar-item svg {
+    box-sizing: content-box;
+    margin-block: -0.25rem;
+    border-radius: 999px;
+    padding: 0.25rem 1.1rem;
+  }
+
   .tab-bar-item[aria-current='page'] {
     color: var(--color-ink);
+  }
+
+  .tab-bar-item[aria-current='page'] svg {
+    background: var(--color-line);
   }
 
   .skeleton {
@@ -1580,9 +1628,9 @@ body {
       width: 100%;
       max-width: none;
       max-height: 85dvh;
-      margin: auto 0 0;
-      border-radius: var(--radius-card) var(--radius-card) 0 0;
-      padding-bottom: env(safe-area-inset-bottom);
+      margin: 0 0 auto;
+      border-radius: 0 0 var(--radius-card) var(--radius-card);
+      padding-top: env(safe-area-inset-top);
     }
   }
 }
@@ -1617,6 +1665,7 @@ body {
 
   .primary-button:active:not(:disabled),
   .secondary-button:active:not(:disabled),
+  .danger-button:active:not(:disabled),
   .icon-button:active,
   .avatar-button:active {
     transform: scale(0.95);
@@ -1660,6 +1709,38 @@ body {
 
   .popover-panel {
     animation: popover-enter 180ms var(--ease-settle) both;
+  }
+}
+
+@property --scroll-x-start {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --scroll-x-end {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@keyframes scroll-x-fade {
+  from {
+    --scroll-x-start: 0px;
+    --scroll-x-end: 1.5rem;
+  }
+
+  2% {
+    --scroll-x-start: 1.5rem;
+  }
+
+  98% {
+    --scroll-x-end: 1.5rem;
+  }
+
+  to {
+    --scroll-x-start: 1.5rem;
+    --scroll-x-end: 0px;
   }
 }
 

@@ -32,4 +32,15 @@ describe('Toggle', () => {
     await click(toggle);
     expect(onChange).toHaveBeenCalledWith(true);
   });
+
+  it('switches from its label and description too', async () => {
+    const onChange = vi.fn();
+    const { container } = await render(
+      <Toggle checked description="Shown on your profile." label="Public profile" onChange={onChange} />,
+    );
+
+    await click(container.querySelector('.text-muted')!);
+    expect(onChange).toHaveBeenCalledOnce();
+    expect(onChange).toHaveBeenCalledWith(false);
+  });
 });

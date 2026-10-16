@@ -95,6 +95,7 @@ describe('Sidebar and AppShell', () => {
       </AppShell>,
     );
 
+    expect(container.querySelector('nav[aria-label="Primary"]')).toBeNull();
     const sidebar = container.querySelector('aside nav[aria-label="Areas"]')!;
     expect(sidebar.querySelector('[aria-current="page"]')?.textContent).toBe('Home');
     expect(sidebar.textContent).toContain('99+');

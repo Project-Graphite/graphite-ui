@@ -127,5 +127,39 @@ describe('Error snacks', () => {
     const snack = container.querySelector('.snackbar')!;
     expect(snack.classList.contains('snackbar-error')).toBe(true);
     expect(snack.getAttribute('role')).toBe('alert');
+    expect(snack.closest('[aria-live]')).toBeNull();
+  });
+
+  it('stay until dismissed while other snacks time out', async () => {
+    vi.useFakeTimers();
+    try {
+      function Show() {
+        const show = useSnackbar();
+        return (
+          <button
+            onClick={() => {
+              show({ message: 'Saved' });
+              show({ message: 'Could not sync', tone: 'error' });
+            }}
+            type="button"
+          >
+            show
+          </button>
+        );
+      }
+      const { container } = await render(
+        <SnackbarProvider>
+          <Show />
+        </SnackbarProvider>,
+      );
+      await click(container.querySelector('button')!);
+
+      await act(async () => vi.advanceTimersByTime(60_000));
+
+      expect(container.querySelector('[role="status"] .snackbar')?.classList.contains('snackbar-leaving')).toBe(true);
+      expect(container.querySelector('.snackbar-error')?.classList.contains('snackbar-leaving')).toBe(false);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

@@ -106,7 +106,7 @@ export function CommandPalette({
           type="text"
           value={query}
         />
-        <kbd className="mono-sm text-faint">esc</kbd>
+        <kbd className="mono-sm text-faint [@media(hover:none)]:hidden">esc</kbd>
       </div>
       <div className="command-list" id={listId} role="listbox">
         {ordered.length === 0 ? (

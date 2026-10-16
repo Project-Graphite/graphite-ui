@@ -12,6 +12,7 @@ export function ConfirmDialog({
   onClose,
   onConfirm,
   title,
+  tone,
 }: {
   busyLabel?: string;
   cancelLabel?: string;
@@ -22,6 +23,7 @@ export function ConfirmDialog({
   onClose: () => void;
   onConfirm: () => Promise<void>;
   title: string;
+  tone?: 'danger';
 }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -46,7 +48,7 @@ export function ConfirmDialog({
         <button className="secondary-button" disabled={busy} onClick={onClose} type="button">
           {cancelLabel}
         </button>
-        <button className="primary-button" disabled={busy} onClick={() => void confirm()} type="button">
+        <button className={tone === 'danger' ? 'danger-button' : 'primary-button'} disabled={busy} onClick={() => void confirm()} type="button">
           {busy ? busyLabel : confirmLabel}
         </button>
       </div>

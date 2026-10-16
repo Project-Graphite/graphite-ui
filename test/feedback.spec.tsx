@@ -24,9 +24,32 @@ describe('SnackbarProvider', () => {
     for (let count = 0; count < 4; count += 1) await click(button);
 
     const region = container.querySelector('.snackbar-region')!;
-    expect(region.getAttribute('aria-live')).toBe('polite');
+    expect(region.querySelector('[role="status"]')?.getAttribute('aria-live')).toBe('polite');
     expect(region.querySelectorAll('.snackbar')).toHaveLength(3);
     expect(region.querySelector('a')?.getAttribute('href')).toBe('/inbox');
+  });
+
+  it('runs a button action and dismisses the snack', async () => {
+    const onSelect = vi.fn();
+    function Show() {
+      const show = useSnackbar();
+      return (
+        <button onClick={() => show({ message: 'Note deleted', action: { label: 'undo', onSelect } })} type="button">
+          show
+        </button>
+      );
+    }
+    const { container } = await render(
+      <SnackbarProvider>
+        <Show />
+      </SnackbarProvider>,
+    );
+    await click(container.querySelector('button')!);
+
+    await click([...container.querySelectorAll('.snackbar button')].find((button) => button.textContent === 'undo')!);
+
+    expect(onSelect).toHaveBeenCalledOnce();
+    expect(container.querySelector('.snackbar')?.classList.contains('snackbar-leaving')).toBe(true);
   });
 });
 
@@ -66,5 +89,9 @@ describe('helpers', () => {
     expect(timeAgo(new Date(Date.now() - 2 * 3_600_000).toISOString())).toBe(
       new Intl.RelativeTimeFormat(undefined, { numeric: 'auto' }).format(-2, 'hour'),
     );
+  });
+
+  it('describes an invalid date as nothing', () => {
+    expect(timeAgo('not a date')).toBe('');
   });
 });

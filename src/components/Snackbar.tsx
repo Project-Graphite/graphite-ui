@@ -13,7 +13,7 @@ interface Snack {
   id: number;
   message: string;
   detail?: string;
-  action?: { label: string; href: string };
+  action?: { label: string } & ({ href: string } | { onSelect: () => void });
   tone?: 'error';
 }
 
@@ -27,6 +27,7 @@ function SnackbarItem({ onDismiss, snack }: { onDismiss: (id: number) => void; s
   const Link = useLink();
   const [paused, setPaused] = useState(false);
   const [leaving, setLeaving] = useState(false);
+  const { action } = snack;
 
   const leave = useCallback(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) onDismiss(snack.id);
@@ -34,10 +35,10 @@ function SnackbarItem({ onDismiss, snack }: { onDismiss: (id: number) => void; s
   }, [onDismiss, snack.id]);
 
   useEffect(() => {
-    if (paused || leaving) return;
+    if (paused || leaving || snack.tone === 'error') return;
     const timer = window.setTimeout(leave, visibleMs);
     return () => window.clearTimeout(timer);
-  }, [leave, leaving, paused]);
+  }, [leave, leaving, paused, snack.tone]);
 
   return (
     <div
@@ -55,14 +56,26 @@ function SnackbarItem({ onDismiss, snack }: { onDismiss: (id: number) => void; s
         <p className="m-0 text-sm text-ink">{snack.message}</p>
         {snack.detail && <p className="mono-sm m-0 mt-0.5 truncate text-faint">{snack.detail}</p>}
       </div>
-      {snack.action && (
-        <Link className="rule-link mono-sm shrink-0" href={snack.action.href} onClick={leave}>
-          {snack.action.label}
-        </Link>
-      )}
+      {action &&
+        ('href' in action ? (
+          <Link className="rule-link mono-sm shrink-0" href={action.href} onClick={leave}>
+            {action.label}
+          </Link>
+        ) : (
+          <button
+            className="rule-link mono-sm shrink-0"
+            onClick={() => {
+              leave();
+              action.onSelect();
+            }}
+            type="button"
+          >
+            {action.label}
+          </button>
+        ))}
       <button
         aria-label="Dismiss"
-        className="text-button shrink-0 px-1 text-lg leading-none"
+        className="text-button -m-2.5 inline-flex size-10 shrink-0 items-center justify-center text-lg leading-none"
         onClick={leave}
         type="button"
       >
@@ -90,10 +103,19 @@ export function SnackbarProvider({ children }: { children: ReactNode }) {
   return (
     <SnackbarContext.Provider value={show}>
       {children}
-      <div aria-live="polite" className="snackbar-region" role="status">
-        {snacks.map((snack) => (
-          <SnackbarItem key={snack.id} onDismiss={dismiss} snack={snack} />
-        ))}
+      <div className="snackbar-region">
+        <div aria-live="polite" className="grid gap-[0.6rem]" role="status">
+          {snacks
+            .filter((snack) => snack.tone !== 'error')
+            .map((snack) => (
+              <SnackbarItem key={snack.id} onDismiss={dismiss} snack={snack} />
+            ))}
+        </div>
+        {snacks
+          .filter((snack) => snack.tone === 'error')
+          .map((snack) => (
+            <SnackbarItem key={snack.id} onDismiss={dismiss} snack={snack} />
+          ))}
       </div>
     </SnackbarContext.Provider>
   );

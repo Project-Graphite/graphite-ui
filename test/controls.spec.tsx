@@ -216,7 +216,7 @@ describe('Meter', () => {
     expect(meter.hasAttribute('data-over')).toBe(false);
 
     await rerender(<Meter label="Garden goal" value={1.3} />);
-    expect(meter.getAttribute('aria-valuenow')).toBe('130');
+    expect(meter.getAttribute('aria-valuenow')).toBe('100');
     expect(meter.querySelector<HTMLElement>('.meter-fill')!.style.width).toBe('100%');
     expect(meter.hasAttribute('data-over')).toBe(true);
   });

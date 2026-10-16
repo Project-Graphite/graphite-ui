@@ -68,9 +68,9 @@ export function AppShell({
     <ShellContext.Provider value={{ collapsed: Boolean(sidebar) && collapsed }}>
       <div className="flex min-h-screen flex-col pb-[calc(var(--tab-bar-height)+env(safe-area-inset-bottom))] md:pb-0">
         <a className="skip-link" href="#content">
-          skip to content
+          Skip to content
         </a>
-        <header className="sticky top-0 z-20 h-(--header-height) border-b border-line-soft bg-paper/90 backdrop-blur-md">
+        <header className="sticky top-0 z-20 h-(--header-height) border-b border-line-soft bg-paper/90 pr-[env(safe-area-inset-right)] pl-[env(safe-area-inset-left)] backdrop-blur-md">
           <div className={sidebar ? 'shell-bar flex h-full items-center gap-2' : 'shell flex h-full items-center gap-6'}>
             {sidebar && (
               <button
@@ -92,18 +92,20 @@ export function AppShell({
               {brand.mark}
               {brand.name}
             </Link>
-            <nav aria-label="Primary" className="mono-sm hidden items-center gap-6 md:flex">
-              {nav.map((item) => (
-                <Link
-                  aria-current={item.active ? 'page' : undefined}
-                  className={`nav-link whitespace-nowrap no-underline ${item.active ? 'text-ink' : 'text-muted hover:text-ink'}`}
-                  href={item.href}
-                  key={item.href}
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
+            {nav.length > 0 && (
+              <nav aria-label="Primary" className="mono-sm hidden items-center gap-6 md:flex">
+                {nav.map((item) => (
+                  <Link
+                    aria-current={item.active ? 'page' : undefined}
+                    className={`nav-link whitespace-nowrap no-underline ${item.active ? 'text-ink' : 'text-muted hover:text-ink'}`}
+                    href={item.href}
+                    key={item.href}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </nav>
+            )}
             <div className="ml-auto flex items-center gap-2">{actions}</div>
           </div>
           {alert}

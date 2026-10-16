@@ -15,7 +15,7 @@ export function Toggle({
 }) {
   const labelId = useId();
   return (
-    <div
+    <label
       className={`toggle-row ${disabled ? 'opacity-55' : ''}`}
     >
       <span>
@@ -35,6 +35,6 @@ export function Toggle({
       >
         <span className="toggle-knob" />
       </button>
-    </div>
+    </label>
   );
 }

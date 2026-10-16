@@ -1,7 +1,9 @@
 const relativeTime = new Intl.RelativeTimeFormat(undefined, { numeric: 'auto' });
 
 export function timeAgo(date: string) {
-  const seconds = (new Date(date).getTime() - Date.now()) / 1000;
+  const time = new Date(date).getTime();
+  if (Number.isNaN(time)) return '';
+  const seconds = (time - Date.now()) / 1000;
   const [unit, size] = (
     [
       ['year', 31_536_000],

@@ -50,6 +50,66 @@ describe('Dialog', () => {
     expect(document.activeElement).toBe(opener);
     opener.remove();
   });
+
+  it('starts on the first field instead of the close button', async () => {
+    const { container } = await render(
+      <Dialog onClose={() => {}} title="Change email">
+        <input aria-label="Email" />
+      </Dialog>,
+    );
+
+    expect(document.activeElement).toBe(container.querySelector('input'));
+  });
+
+  it('cannot be dismissed when it must be acknowledged', async () => {
+    const onClose = vi.fn();
+    const { container } = await render(
+      <Dialog dismissible={false} onClose={onClose} title="Your recovery code">
+        <button onClick={onClose} type="button">
+          Done
+        </button>
+      </Dialog>,
+    );
+    const dialog = container.querySelector('dialog')!;
+    const escape = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+    const cancel = new Event('cancel', { cancelable: true });
+
+    await act(async () => {
+      dialog.dispatchEvent(escape);
+      dialog.dispatchEvent(cancel);
+    });
+    await click(dialog);
+
+    expect(container.querySelector('button[aria-label="Close"]')).toBeNull();
+    expect(escape.defaultPrevented).toBe(true);
+    expect(cancel.defaultPrevented).toBe(true);
+    expect(onClose).not.toHaveBeenCalled();
+  });
+
+  it('closes from the backdrop until a field is edited', async () => {
+    const onClose = vi.fn();
+    const form = (
+      <Dialog onClose={onClose} title="Rename">
+        <input aria-label="Name" />
+      </Dialog>
+    );
+
+    const pristine = await render(form);
+    await click(pristine.container.querySelector('dialog')!);
+    expect(onClose).toHaveBeenCalledOnce();
+
+    const edited = await render(form);
+    const input = edited.container.querySelector('input')!;
+    await act(async () => {
+      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(input, 'Garden');
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    await click(edited.container.querySelector('dialog')!);
+    expect(onClose).toHaveBeenCalledOnce();
+
+    await click(edited.container.querySelector('button[aria-label="Close"]')!);
+    expect(onClose).toHaveBeenCalledTimes(2);
+  });
 });
 
 describe('ConfirmDialog', () => {
@@ -86,5 +146,21 @@ describe('ConfirmDialog', () => {
 
     expect(onConfirm).toHaveBeenCalledOnce();
     expect(onClose).toHaveBeenCalledOnce();
+  });
+
+  it('marks a destructive confirmation with the danger button', async () => {
+    const view = (tone?: 'danger') => (
+      <ConfirmDialog confirmLabel="Delete" onClose={() => {}} onConfirm={() => Promise.resolve()} title="Delete?" tone={tone}>
+        <p>Gone for good.</p>
+      </ConfirmDialog>
+    );
+    const confirmButton = (container: HTMLElement) =>
+      [...container.querySelectorAll('button')].find((button) => button.textContent === 'Delete')!;
+
+    const plain = await render(view());
+    expect(confirmButton(plain.container).className).toBe('primary-button');
+
+    const danger = await render(view('danger'));
+    expect(confirmButton(danger.container).className).toBe('danger-button');
   });
 });

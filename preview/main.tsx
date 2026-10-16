@@ -76,13 +76,22 @@ function Section({ children, title }: { children: ReactNode; title: string }) {
 function SnackbarDemo() {
   const show = useSnackbar();
   return (
-    <button
-      className="secondary-button inline-flex w-fit"
-      onClick={() => show({ message: 'Saved to your library', detail: 'just now', action: { label: 'open', href: '#snackbar' } })}
-      type="button"
-    >
-      Show a snackbar
-    </button>
+    <div className="flex flex-wrap gap-3">
+      <button
+        className="secondary-button inline-flex w-fit"
+        onClick={() => show({ message: 'Saved to your library', detail: 'just now', action: { label: 'open', href: '#snackbar' } })}
+        type="button"
+      >
+        Show a snackbar
+      </button>
+      <button
+        className="secondary-button inline-flex w-fit"
+        onClick={() => show({ message: 'Note deleted', action: { label: 'undo', onSelect: () => show({ message: 'Note restored' }) } })}
+        type="button"
+      >
+        Show an undo snackbar
+      </button>
+    </div>
   );
 }
 
@@ -297,6 +306,7 @@ function Preview() {
             onClose={() => setDialog(null)}
             onConfirm={() => Promise.reject(new Error('This preview cannot delete anything.'))}
             title="Delete this note?"
+            tone="danger"
           >
             <p className="m-0">Confirming shows the error state.</p>
           </ConfirmDialog>
