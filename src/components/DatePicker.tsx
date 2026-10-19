@@ -1,6 +1,10 @@
-import { useEffect, useId, useLayoutEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
-import { useAnchoredPanel } from '../lib/useAnchoredPanel.js';
-import { describedBy, FieldMessage, triggerClass, type TriggerLook } from './Field.js';
+import MuiIconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import MuiPopover from '@mui/material/Popover';
+import MuiTextField from '@mui/material/TextField';
+import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
+import { Button, IconButton } from './Button.js';
+import type { TriggerLook } from './Field.js';
 import { Icon } from './Icon.js';
 
 const dayMs = 86_400_000;
@@ -58,13 +62,14 @@ export function DatePicker({
   value?: string;
   weekStartsOn?: number;
 }) {
-  const id = useId();
   const [own, setOwn] = useState(defaultValue ?? '');
   const current = value ?? own;
   const [focus, setFocus] = useState(valid(current) ? current : todayText());
-  const hidden = useRef<HTMLInputElement>(null);
+  const [open, setOpen] = useState(false);
   const grid = useRef<HTMLDivElement>(null);
-  const { close, open, panel, place, root, setOpen, trigger } = useAnchoredPanel<HTMLButtonElement, HTMLDivElement>(296);
+  const root = useRef<HTMLDivElement>(null);
+  const field = useRef<HTMLInputElement>(null);
+  const hidden = useRef<HTMLInputElement>(null);
   const month = focus.slice(0, 7);
   const days = monthGrid(month, weekStartsOn);
   const today = todayText();
@@ -78,22 +83,24 @@ export function DatePicker({
     return () => form.removeEventListener('reset', reset);
   }, [defaultValue]);
 
-  useLayoutEffect(() => {
-    if (!open) return;
-    place();
-    grid.current?.querySelector<HTMLButtonElement>(`[data-day="${focus}"]`)?.focus({ preventScroll: true });
-  }, [focus, open, place]);
+  const focusDay = () => grid.current?.querySelector<HTMLButtonElement>(`[data-day="${focus}"]`)?.focus({ preventScroll: true });
+
+  useEffect(focusDay, [focus]);
 
   function show() {
     setFocus(valid(current) ? current : today);
     setOpen(true);
   }
 
+  function close() {
+    setOpen(false);
+    field.current?.focus();
+  }
+
   function choose(next: string) {
     if (value === undefined) setOwn(next);
     if (next !== current) onChange?.(next);
     close();
-    trigger.current?.focus();
   }
 
   function shiftMonth(by: number) {
@@ -114,102 +121,97 @@ export function DatePicker({
     }
   }
 
-  const control = (
-    <div className={`relative ${label ? '' : className}`} ref={root}>
-      <button
-        aria-describedby={describedBy(id, error, hint)}
-        aria-expanded={open}
-        aria-haspopup="dialog"
-        aria-invalid={error ? true : undefined}
-        aria-label={ariaLabel}
-        aria-labelledby={label ? `${id}-label ${id}-value` : undefined}
-        className={triggerClass({ quiet, size })}
-        disabled={disabled}
-        onClick={() => (open ? close() : show())}
-        ref={trigger}
-        type="button"
-      >
-        <span className={`truncate ${valid(current) ? '' : 'text-faint'}`} id={`${id}-value`}>
-          {valid(current) ? formatDay(current) : placeholder}
-        </span>
-        <span className="trigger-icon">
-          <Icon name="calendar" size={16} />
-        </span>
-      </button>
-      <input name={name} ref={hidden} type="hidden" value={current} />
-      {open && (
-        <div
-          aria-label="Choose a date"
-          className="popover-panel date-panel"
-          onKeyDown={(event) => {
-            if (event.key === 'Escape') {
-              event.preventDefault();
-              close();
-              trigger.current?.focus();
-            }
-          }}
-          popover="manual"
-          ref={panel}
-          role="dialog"
-        >
-          <div className="date-panel-head">
-            <button aria-label="Previous month" className="icon-button" onClick={() => shiftMonth(-1)} type="button">
-              <Icon name="chevron-left" size={16} />
-            </button>
-            <span aria-live="polite" className="font-medium">
-              {formatDay(`${month}-01`, { month: 'long', year: 'numeric' })}
-            </span>
-            <button aria-label="Next month" className="icon-button" onClick={() => shiftMonth(1)} type="button">
-              <Icon name="chevron-right" size={16} />
-            </button>
-          </div>
-          <div className="date-grid" onKeyDown={onGridKey} ref={grid} role="grid">
-            {days.slice(0, 7).map((day) => (
-              <span aria-hidden="true" className="date-weekday" key={`head-${day}`}>
-                {formatDay(day, { weekday: 'narrow' })}
-              </span>
-            ))}
-            {days.map((day) => (
-              <button
-                aria-current={day === today ? 'date' : undefined}
-                aria-label={formatDay(day, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
-                aria-pressed={day === current}
-                className="date-day"
-                data-day={day}
-                data-outside={day.slice(0, 7) !== month || undefined}
-                disabled={outside(day)}
-                key={day}
-                onClick={() => choose(day)}
-                tabIndex={day === focus ? 0 : -1}
-                type="button"
-              >
-                {Number(day.slice(8))}
-              </button>
-            ))}
-          </div>
-          <div className="date-panel-foot">
-            {optional && current ? (
-              <button className="text-button text-sm" onClick={() => choose('')} type="button">
-                Clear
-              </button>
-            ) : (
-              <span />
-            )}
-            <button className="text-button text-sm" disabled={outside(today)} onClick={() => choose(today)} type="button">
-              Today
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-
-  if (!label) return control;
   return (
-    <div className={`field-label ${className}`}>
-      <span id={`${id}-label`}>{label}</span>
-      {control}
-      <FieldMessage error={error} hint={hint} id={id} />
-    </div>
+    <>
+      <MuiTextField
+        className={className}
+        disabled={disabled}
+        error={Boolean(error)}
+        fullWidth={Boolean(label)}
+        helperText={error ?? hint}
+        inputRef={field}
+        label={label}
+        onClick={show}
+        placeholder={placeholder}
+        ref={root}
+        size={size === 'small' ? 'small' : 'medium'}
+        slotProps={{
+          htmlInput: {
+            'aria-expanded': open,
+            'aria-haspopup': 'dialog',
+            'aria-label': ariaLabel,
+            className: 'cursor-pointer',
+            onKeyDown: (event: KeyboardEvent<HTMLInputElement>) => {
+              if (['ArrowDown', 'Enter', ' '].includes(event.key)) {
+                event.preventDefault();
+                show();
+              }
+            },
+            readOnly: true,
+          },
+          input: {
+            endAdornment: (
+              <InputAdornment position="end">
+                <Icon name="calendar" size={18} />
+              </InputAdornment>
+            ),
+          },
+        }}
+        value={valid(current) ? formatDay(current) : ''}
+        variant={quiet ? 'standard' : 'outlined'}
+      />
+      <input name={name} ref={hidden} type="hidden" value={current} />
+      <MuiPopover
+        anchorEl={() => root.current!}
+        anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+        disableAutoFocus
+        onClose={close}
+        open={open}
+        slotProps={{ paper: { 'aria-label': 'Choose a date', className: 'w-[19rem] p-3', role: 'dialog' }, transition: { onEntered: focusDay } }}
+      >
+        <div className="date-panel-head">
+          <IconButton icon="chevron-left" label="Previous month" onClick={() => shiftMonth(-1)} size="small" />
+          <span aria-live="polite" className="font-medium">
+            {formatDay(`${month}-01`, { month: 'long', year: 'numeric' })}
+          </span>
+          <IconButton icon="chevron-right" label="Next month" onClick={() => shiftMonth(1)} size="small" />
+        </div>
+        <div className="date-grid" onKeyDown={onGridKey} ref={grid} role="grid">
+          {days.slice(0, 7).map((day) => (
+            <span aria-hidden="true" className="date-weekday" key={`head-${day}`}>
+              {formatDay(day, { weekday: 'narrow' })}
+            </span>
+          ))}
+          {days.map((day) => (
+            <MuiIconButton
+              aria-current={day === today ? 'date' : undefined}
+              aria-label={formatDay(day, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+              aria-pressed={day === current}
+              className={`aspect-square text-sm ${day === current ? 'bg-ink text-paper hover:bg-ink' : day.slice(0, 7) === month ? 'text-ink' : 'text-faint'} ${day === today && day !== current ? 'border border-solid border-muted' : ''}`}
+              data-day={day}
+              disabled={outside(day)}
+              key={day}
+              onClick={() => choose(day)}
+              size="small"
+              tabIndex={day === focus ? 0 : -1}
+            >
+              {Number(day.slice(8))}
+            </MuiIconButton>
+          ))}
+        </div>
+        <div className="date-panel-foot">
+          {optional && current ? (
+            <Button onClick={() => choose('')} size="small" variant="text">
+              Clear
+            </Button>
+          ) : (
+            <span />
+          )}
+          <Button disabled={outside(today)} onClick={() => choose(today)} size="small" variant="text">
+            Today
+          </Button>
+        </div>
+      </MuiPopover>
+    </>
   );
 }
