@@ -1,5 +1,6 @@
 export { AppShell, useShell, type ShellNavItem, type ShellTab } from './components/AppShell.js';
 export { Avatar } from './components/Avatar.js';
+export { Button, IconButton, type ButtonVariant } from './components/Button.js';
 export { CodeInput } from './components/CodeInput.js';
 export { ColorSwatches } from './components/ColorSwatches.js';
 export {

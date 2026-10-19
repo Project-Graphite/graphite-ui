@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import {
   AppShell,
   Avatar,
+  Button,
   CodeInput,
   ColorSwatches,
   CommandPalette,
@@ -14,6 +15,7 @@ import {
   FormPanelSkeleton,
   GridListbox,
   Icon,
+  IconButton,
   LinesSkeleton,
   ListSkeleton,
   Menu,
@@ -35,10 +37,12 @@ import {
   TimePicker,
   Toggle,
   timeAgo,
+  UiProvider,
   useCommandShortcut,
   useSnackbar,
   type CommandItem,
   type IconName,
+  type UiLinkProps,
 } from '../src/index.ts';
 import './styles.css';
 
@@ -182,21 +186,19 @@ function Preview() {
 
       <Section title="Buttons">
         <div className="flex flex-wrap items-center gap-3">
-          <button className="primary-button inline-flex" type="button">
-            Primary
-          </button>
-          <button className="secondary-button inline-flex" type="button">
-            Secondary
-          </button>
-          <button className="primary-button inline-flex" disabled type="button">
+          <Button variant="primary">Primary</Button>
+          <Button>Secondary</Button>
+          <Button disabled variant="primary">
             Disabled
-          </button>
-          <button className="text-button" type="button">
-            Text button
-          </button>
+          </Button>
+          <Button variant="text">Text button</Button>
+          <Button icon="trash" variant="danger">
+            Delete
+          </Button>
           <a className="rule-link" href="#buttons">
             rule link
           </a>
+          <IconButton icon="filter" label="Filter" />
           <button aria-label="Filter" className="icon-button" type="button">
             <Icon name="filter" />
             <span className="count-badge">3</span>
@@ -439,8 +441,10 @@ function Preview() {
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <SnackbarProvider>
-      <Preview />
-    </SnackbarProvider>
+    <UiProvider link={(props: UiLinkProps) => <a {...props} />}>
+      <SnackbarProvider>
+        <Preview />
+      </SnackbarProvider>
+    </UiProvider>
   </StrictMode>,
 );

@@ -119,9 +119,9 @@ body {
 }
 
 @layer base {
-  input:not([type='checkbox'], [type='radio']),
+  input:not([type='checkbox'], [type='radio'], .MuiInputBase-input),
   select,
-  textarea {
+  textarea:not(.MuiInputBase-input) {
     width: 100%;
     min-height: 2.75rem;
     border: 1px solid var(--color-line);
