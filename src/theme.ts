@@ -13,6 +13,7 @@ export function createGraphiteTheme(link: ComponentType<UiLinkProps>) {
         palette: {
           primary: { main: token('ink'), contrastText: token('paper') },
           error: { main: token('danger'), contrastText: token('paper') },
+          info: { main: token('muted'), contrastText: token('paper') },
           success: { main: token('live'), contrastText: token('paper') },
           warning: { main: token('wip'), contrastText: token('paper') },
           background: { default: token('paper'), paper: token('surface') },

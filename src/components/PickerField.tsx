@@ -26,7 +26,7 @@ export function PickerField({
   className?: string;
   disabled?: boolean;
   error?: string;
-  fieldRef: Ref<HTMLInputElement>;
+  fieldRef?: Ref<HTMLInputElement>;
   haspopup: 'dialog' | 'listbox';
   hint?: ReactNode;
   icon: IconName;
@@ -34,7 +34,7 @@ export function PickerField({
   onOpen: () => void;
   open: boolean;
   placeholder?: string;
-  rootRef: Ref<HTMLDivElement>;
+  rootRef?: Ref<HTMLDivElement>;
   value: string;
 }) {
   return (

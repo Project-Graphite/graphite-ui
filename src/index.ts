@@ -23,6 +23,7 @@ export { Meter } from './components/Meter.js';
 export { OutageGate } from './components/OutageGate.js';
 export { PageHeader } from './components/PageHeader.js';
 export { Pagination } from './components/Pagination.js';
+export { PickerField } from './components/PickerField.js';
 export { Popover } from './components/Popover.js';
 export { Sidebar, type SidebarItem, type SidebarSection } from './components/Sidebar.js';
 export {

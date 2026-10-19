@@ -5,7 +5,7 @@ import { PickerField } from './PickerField.js';
 
 export interface GridGroup {
   label: string;
-  options: Array<{ label: string; value: string }>;
+  options: Array<{ label: string; value: string; wide?: boolean }>;
 }
 
 export function GridListbox({
@@ -111,7 +111,7 @@ export function GridListbox({
           {groups.map((group) => (
             <Fragment key={group.label}>
               <p className="eyebrow col-span-full mt-3 mb-1">{group.label}</p>
-              {group.options.map((item) => option(item.value, item.label))}
+              {group.options.map((item) => option(item.value, item.label, item.wide ? 'col-span-full' : undefined))}
             </Fragment>
           ))}
         </div>

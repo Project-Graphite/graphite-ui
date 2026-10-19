@@ -16,7 +16,7 @@ export function ColorSwatches({
   label: ReactNode;
   name: string;
   onChange?: (color: TagColor) => void;
-  value?: TagColor;
+  value?: TagColor | null;
 }) {
   return (
     <FormControl component="fieldset">
