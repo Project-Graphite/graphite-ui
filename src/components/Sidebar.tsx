@@ -44,7 +44,7 @@ export function Sidebar({
               {Array.from({ length: section === 1 ? 3 : 4 }, (_, row) => (
                 <span className="sidebar-item" key={row}>
                   <Skeleton className="h-[18px] w-[18px] shrink-0 rounded-md" />
-                  {!collapsed && <Skeleton className="h-3 w-24" />}
+                  <Skeleton className="sidebar-text h-3 w-24" />
                 </span>
               ))}
             </div>
@@ -67,10 +67,8 @@ export function Sidebar({
                     <ItemIcon icon={item.icon} label={item.label} />
                     {collapsed && item.badge ? <span aria-hidden="true" className="sidebar-dot" /> : null}
                   </span>
-                  {!collapsed && <span className="min-w-0 flex-1 truncate">{item.label}</span>}
-                  {!collapsed && item.badge ? (
-                    <span className="mono-sm text-faint">{item.badge > 99 ? '99+' : item.badge}</span>
-                  ) : null}
+                  <span className="sidebar-text min-w-0 flex-1 truncate">{item.label}</span>
+                  {item.badge ? <span className="sidebar-text mono-sm text-faint">{item.badge > 99 ? '99+' : item.badge}</span> : null}
                 </ListItemButton>
               ))}
             </div>

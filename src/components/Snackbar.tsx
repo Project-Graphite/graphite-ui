@@ -67,7 +67,7 @@ function SnackbarItem({ onDismiss, snack }: { onDismiss: (id: number) => void; s
             <IconButton color="inherit" icon="x" label="Dismiss" onClick={leave} size="small" />
           </>
         }
-        className={`pointer-events-auto ${snack.tone === 'error' ? 'bg-danger text-paper' : ''}`}
+        className={`pointer-events-auto ${snack.tone === 'error' ? 'border-l-[3px] border-l-danger' : ''}`}
         message={
           <>
             <p className="m-0 text-sm">{snack.message}</p>
