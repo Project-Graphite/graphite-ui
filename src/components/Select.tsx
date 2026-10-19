@@ -28,7 +28,6 @@ export function Select<T extends string = string>({
   defaultValue,
   disabled = false,
   error,
-  fullWidth,
   hint,
   label,
   name,
@@ -45,7 +44,6 @@ export function Select<T extends string = string>({
   defaultValue?: T | '';
   disabled?: boolean;
   error?: string;
-  fullWidth?: boolean;
   hint?: ReactNode;
   label?: ReactNode;
   name?: string;
@@ -77,7 +75,7 @@ export function Select<T extends string = string>({
   const field: TextFieldProps = {
     disabled,
     error: Boolean(error),
-    fullWidth: fullWidth ?? Boolean(label),
+    fullWidth: Boolean(label),
     helperText: error ?? hint,
     label,
     size: size === 'small' ? 'small' : 'medium',
@@ -88,7 +86,7 @@ export function Select<T extends string = string>({
     return (
       <>
         <Autocomplete
-          className={(fullWidth ?? label) ? className : `w-40 ${className ?? ''}`}
+          className={label ? className : `w-40 ${className ?? ''}`}
           disableClearable
           disabled={disabled}
           filterOptions={(list, state) => {

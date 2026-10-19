@@ -9,7 +9,7 @@ export interface TriggerLook {
 interface FieldText {
   error?: string;
   hint?: ReactNode;
-  label?: ReactNode;
+  label: ReactNode;
 }
 
 function fieldProps({
