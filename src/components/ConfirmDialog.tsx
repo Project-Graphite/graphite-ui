@@ -1,5 +1,7 @@
+import Alert from '@mui/material/Alert';
 import { useState, type ReactNode } from 'react';
 import { errorMessage } from '../lib/errors.js';
+import { Button } from './Button.js';
 import { Dialog } from './Dialog.js';
 
 export function ConfirmDialog({
@@ -43,14 +45,18 @@ export function ConfirmDialog({
   return (
     <Dialog eyebrow={eyebrow} onClose={onClose} title={title}>
       <div className="mt-5 grid gap-3 text-sm text-muted">{children}</div>
-      {error && <p className="error-message mt-5 mb-0">{error}</p>}
+      {error && (
+        <Alert className="mt-5" severity="error">
+          {error}
+        </Alert>
+      )}
       <div className="mt-6 flex justify-end gap-3">
-        <button className="secondary-button" disabled={busy} onClick={onClose} type="button">
+        <Button disabled={busy} onClick={onClose}>
           {cancelLabel}
-        </button>
-        <button className={tone === 'danger' ? 'danger-button' : 'primary-button'} disabled={busy} onClick={() => void confirm()} type="button">
+        </Button>
+        <Button disabled={busy} onClick={() => void confirm()} variant={tone === 'danger' ? 'danger' : 'primary'}>
           {busy ? busyLabel : confirmLabel}
-        </button>
+        </Button>
       </div>
     </Dialog>
   );

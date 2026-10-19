@@ -1,3 +1,6 @@
+import MuiButton from '@mui/material/Button';
+import Grow from '@mui/material/Grow';
+import SnackbarContent from '@mui/material/SnackbarContent';
 import {
   createContext,
   useCallback,
@@ -7,7 +10,7 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { useLink } from '../UiProvider.js';
+import { IconButton } from './Button.js';
 
 interface Snack {
   id: number;
@@ -24,7 +27,6 @@ const SnackbarContext = createContext<ShowSnack>(() => {});
 const visibleMs = 6_000;
 
 function SnackbarItem({ onDismiss, snack }: { onDismiss: (id: number) => void; snack: Snack }) {
-  const Link = useLink();
   const [paused, setPaused] = useState(false);
   const [leaving, setLeaving] = useState(false);
   const { action } = snack;
@@ -41,47 +43,44 @@ function SnackbarItem({ onDismiss, snack }: { onDismiss: (id: number) => void; s
   }, [leave, leaving, paused, snack.tone]);
 
   return (
-    <div
-      className={`snackbar ${snack.tone === 'error' ? 'snackbar-error' : ''} ${leaving ? 'snackbar-leaving' : ''}`}
-      role={snack.tone === 'error' ? 'alert' : undefined}
-      onAnimationEnd={(event) => {
-        if (leaving && event.target === event.currentTarget) onDismiss(snack.id);
-      }}
-      onBlur={() => setPaused(false)}
-      onFocus={() => setPaused(true)}
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-    >
-      <div className="min-w-0 flex-1">
-        <p className="m-0 text-sm text-ink">{snack.message}</p>
-        {snack.detail && <p className="mono-sm m-0 mt-0.5 truncate text-faint">{snack.detail}</p>}
-      </div>
-      {action &&
-        ('href' in action ? (
-          <Link className="rule-link mono-sm shrink-0" href={action.href} onClick={leave}>
-            {action.label}
-          </Link>
-        ) : (
-          <button
-            className="rule-link mono-sm shrink-0"
-            onClick={() => {
-              leave();
-              action.onSelect();
-            }}
-            type="button"
-          >
-            {action.label}
-          </button>
-        ))}
-      <button
-        aria-label="Dismiss"
-        className="text-button -m-2.5 inline-flex size-10 shrink-0 items-center justify-center text-lg leading-none"
-        onClick={leave}
-        type="button"
-      >
-        ×
-      </button>
-    </div>
+    <Grow appear in={!leaving} onExited={() => onDismiss(snack.id)}>
+      <SnackbarContent
+        action={
+          <>
+            {action &&
+              ('href' in action ? (
+                <MuiButton color="inherit" href={action.href} onClick={leave} size="small">
+                  {action.label}
+                </MuiButton>
+              ) : (
+                <MuiButton
+                  color="inherit"
+                  onClick={() => {
+                    leave();
+                    action.onSelect();
+                  }}
+                  size="small"
+                >
+                  {action.label}
+                </MuiButton>
+              ))}
+            <IconButton color="inherit" icon="x" label="Dismiss" onClick={leave} size="small" />
+          </>
+        }
+        className={`pointer-events-auto ${snack.tone === 'error' ? 'bg-danger text-paper' : ''}`}
+        message={
+          <>
+            <p className="m-0 text-sm">{snack.message}</p>
+            {snack.detail && <p className="mono-sm m-0 mt-0.5 truncate opacity-70">{snack.detail}</p>}
+          </>
+        }
+        onBlur={() => setPaused(false)}
+        onFocus={() => setPaused(true)}
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+        role={snack.tone === 'error' ? 'alert' : 'none'}
+      />
+    </Grow>
   );
 }
 

@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react';
-import { useAnchoredPanel } from '../lib/useAnchoredPanel.js';
+import MuiPopover from '@mui/material/Popover';
+import { useState, type ReactNode } from 'react';
 
 export function Popover({
   align = 'end',
@@ -18,32 +18,35 @@ export function Popover({
   triggerClassName?: string;
   triggerLabel: string;
 }) {
-  const { close, open, panel, root, setOpen, trigger: button } = useAnchoredPanel<HTMLButtonElement, HTMLDivElement>('auto', align);
+  const [anchor, setAnchor] = useState<HTMLElement | null>(null);
+  const close = () => setAnchor(null);
+  const horizontal = align === 'end' ? 'right' : 'left';
 
   return (
-    <div
-      className="relative"
-      onKeyDown={(event) => {
-        if (open && event.key === 'Escape') button.current?.focus();
-      }}
-      ref={root}
-    >
+    <>
       <button
-        aria-expanded={open}
+        aria-expanded={Boolean(anchor)}
         aria-haspopup="dialog"
         aria-label={triggerLabel}
         className={triggerClassName}
-        onClick={() => setOpen((current) => !current)}
-        ref={button}
+        onClick={(event) => {
+          const target = event.currentTarget;
+          setAnchor((current) => (current ? null : target));
+        }}
         type="button"
       >
         {trigger}
       </button>
-      {open && (
-        <div aria-label={label} className={`popover-panel anchored-panel ${panelClassName}`} popover="manual" ref={panel} role="dialog">
-          {children(close)}
-        </div>
-      )}
-    </div>
+      <MuiPopover
+        anchorEl={anchor}
+        anchorOrigin={{ horizontal, vertical: 'bottom' }}
+        onClose={close}
+        open={Boolean(anchor)}
+        slotProps={{ paper: { 'aria-label': label, className: panelClassName, role: 'dialog' } }}
+        transformOrigin={{ horizontal, vertical: 'top' }}
+      >
+        {children(close)}
+      </MuiPopover>
+    </>
   );
 }
