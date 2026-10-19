@@ -1,3 +1,6 @@
+import MuiAvatar from '@mui/material/Avatar';
+import Badge from '@mui/material/Badge';
+
 export function Avatar({
   name,
   present,
@@ -8,9 +11,16 @@ export function Avatar({
   size?: 'sm' | 'md';
 }) {
   return (
-    <span aria-label={present ? `${name}, here now` : name} className={`avatar avatar-${size}`} role="img">
-      <span aria-hidden="true">{name.trim().charAt(0).toUpperCase()}</span>
-      {present && <span aria-hidden="true" className="presence-dot" />}
-    </span>
+    <Badge
+      anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+      color="success"
+      invisible={!present}
+      overlap="circular"
+      variant="dot"
+    >
+      <MuiAvatar aria-label={present ? `${name}, here now` : name} className={`avatar avatar-${size}`} role="img">
+        <span aria-hidden="true">{name.trim().charAt(0).toUpperCase()}</span>
+      </MuiAvatar>
+    </Badge>
   );
 }

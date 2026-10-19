@@ -1,3 +1,4 @@
+import Switch from '@mui/material/Switch';
 import { useId } from 'react';
 
 export function Toggle({
@@ -24,17 +25,13 @@ export function Toggle({
         </span>
         {description && <span className="text-sm text-muted">{description}</span>}
       </span>
-      <button
-        aria-checked={checked}
-        aria-labelledby={labelId}
-        className="toggle"
+      <Switch
+        checked={checked}
         disabled={disabled}
-        onClick={() => onChange(!checked)}
-        role="switch"
-        type="button"
-      >
-        <span className="toggle-knob" />
-      </button>
+        edge="end"
+        onChange={(event) => onChange(event.target.checked)}
+        slotProps={{ input: { 'aria-checked': checked, 'aria-labelledby': labelId } }}
+      />
     </label>
   );
 }

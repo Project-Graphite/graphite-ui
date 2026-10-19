@@ -1,5 +1,7 @@
 export { AppShell, useShell, type ShellNavItem, type ShellTab } from './components/AppShell.js';
 export { Avatar } from './components/Avatar.js';
+export { Button, IconButton, type ButtonVariant } from './components/Button.js';
+export { Checkbox, Radio } from './components/Choice.js';
 export { CodeInput } from './components/CodeInput.js';
 export { ColorSwatches } from './components/ColorSwatches.js';
 export {
@@ -21,6 +23,7 @@ export { Meter } from './components/Meter.js';
 export { OutageGate } from './components/OutageGate.js';
 export { PageHeader } from './components/PageHeader.js';
 export { Pagination } from './components/Pagination.js';
+export { PickerField } from './components/PickerField.js';
 export { Popover } from './components/Popover.js';
 export { Sidebar, type SidebarItem, type SidebarSection } from './components/Sidebar.js';
 export {
@@ -42,6 +45,7 @@ export { Tabs, type TabItem } from './components/Tabs.js';
 export { TagChip, tagColors, type TagColor } from './components/TagChip.js';
 export { TimePicker } from './components/TimePicker.js';
 export { Toggle } from './components/Toggle.js';
+export type { TriggerVariant } from './components/Trigger.js';
 export { errorMessage, isAbortError } from './lib/errors.js';
 export { timeAgo } from './lib/timeAgo.js';
 export { useDelayed } from './lib/useDelayed.js';

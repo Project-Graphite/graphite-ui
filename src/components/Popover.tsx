@@ -1,5 +1,6 @@
-import type { ReactNode } from 'react';
-import { useAnchoredPanel } from '../lib/useAnchoredPanel.js';
+import MuiPopover from '@mui/material/Popover';
+import { useState, type ReactNode } from 'react';
+import { Trigger, type TriggerVariant } from './Trigger.js';
 
 export function Popover({
   align = 'end',
@@ -7,8 +8,9 @@ export function Popover({
   label,
   panelClassName = 'popover-list',
   trigger,
-  triggerClassName = 'icon-button',
+  triggerClassName,
   triggerLabel,
+  triggerVariant = triggerClassName ? undefined : 'icon',
 }: {
   align?: 'start' | 'end';
   children: (close: () => void) => ReactNode;
@@ -17,33 +19,37 @@ export function Popover({
   trigger: ReactNode;
   triggerClassName?: string;
   triggerLabel: string;
+  triggerVariant?: TriggerVariant;
 }) {
-  const { close, open, panel, root, setOpen, trigger: button } = useAnchoredPanel<HTMLButtonElement, HTMLDivElement>('auto', align);
+  const [anchor, setAnchor] = useState<HTMLElement | null>(null);
+  const close = () => setAnchor(null);
+  const horizontal = align === 'end' ? 'right' : 'left';
 
   return (
-    <div
-      className="relative"
-      onKeyDown={(event) => {
-        if (open && event.key === 'Escape') button.current?.focus();
-      }}
-      ref={root}
-    >
-      <button
-        aria-expanded={open}
-        aria-haspopup="dialog"
-        aria-label={triggerLabel}
+    <>
+      <Trigger
         className={triggerClassName}
-        onClick={() => setOpen((current) => !current)}
-        ref={button}
-        type="button"
+        expanded={Boolean(anchor)}
+        haspopup="dialog"
+        label={triggerLabel}
+        onClick={(event) => {
+          const target = event.currentTarget;
+          setAnchor((current) => (current ? null : target));
+        }}
+        variant={triggerVariant}
       >
         {trigger}
-      </button>
-      {open && (
-        <div aria-label={label} className={`popover-panel anchored-panel ${panelClassName}`} popover="manual" ref={panel} role="dialog">
-          {children(close)}
-        </div>
-      )}
-    </div>
+      </Trigger>
+      <MuiPopover
+        anchorEl={anchor}
+        anchorOrigin={{ horizontal, vertical: 'bottom' }}
+        onClose={close}
+        open={Boolean(anchor)}
+        slotProps={{ paper: { 'aria-label': label, className: panelClassName, role: 'dialog' } }}
+        transformOrigin={{ horizontal, vertical: 'top' }}
+      >
+        {children(close)}
+      </MuiPopover>
+    </>
   );
 }

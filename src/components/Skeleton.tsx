@@ -1,9 +1,10 @@
+import MuiSkeleton from '@mui/material/Skeleton';
 import type { ReactNode } from 'react';
 import { useDelayed } from '../lib/useDelayed.js';
 import { placeholderDelayMs } from '../lib/useSettled.js';
 
 export function Skeleton({ className = '' }: { className?: string }) {
-  return <span aria-hidden="true" className={`skeleton ${className}`} />;
+  return <MuiSkeleton animation="wave" aria-hidden="true" className={`motion-reduce:after:hidden ${className}`} variant="rounded" />;
 }
 
 export function Placeholder({

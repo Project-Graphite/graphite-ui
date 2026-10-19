@@ -1,5 +1,6 @@
-import { useEffect, useId, useRef, type ReactNode } from 'react';
-import { Icon } from './Icon.js';
+import MuiDialog from '@mui/material/Dialog';
+import { useCallback, useId, useRef, type ReactNode } from 'react';
+import { IconButton } from './Button.js';
 
 export function Dialog({
   children,
@@ -14,38 +15,30 @@ export function Dialog({
   onClose: () => void;
   title: string;
 }) {
-  const dialog = useRef<HTMLDialogElement>(null);
   const edited = useRef(false);
   const titleId = useId();
-
-  useEffect(() => {
-    const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    dialog.current?.showModal();
-    (
-      dialog.current?.querySelector<HTMLElement>('[autofocus]') ??
-      dialog.current?.querySelector<HTMLElement>(':is(input:not([type="hidden"]), select, textarea):not(:disabled)')
-    )?.focus();
-    return () => opener?.focus();
+  const focusFirstField = useCallback((paper: HTMLDivElement | null) => {
+    if (paper && !paper.contains(document.activeElement)) {
+      paper.querySelector<HTMLElement>(':is(input:not([type="hidden"]), select, textarea):not(:disabled)')?.focus();
+    }
   }, []);
 
   return (
-    <dialog
+    <MuiDialog
       aria-labelledby={titleId}
-      className="m-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-lg rounded-2xl border border-line bg-surface p-0 text-ink backdrop:bg-paper/80 max-sm:mb-0 max-sm:max-h-[90dvh] max-sm:w-full max-sm:max-w-none max-sm:rounded-b-none [scrollbar-gutter:stable]"
-      onCancel={(event) => {
-        event.preventDefault();
-        if (dismissible) onClose();
+      fullWidth
+      onClose={(_, reason) => {
+        if (dismissible && !(reason === 'backdropClick' && edited.current)) onClose();
       }}
-      onChange={() => {
-        edited.current = true;
+      open
+      slotProps={{
+        paper: {
+          onChange: () => {
+            edited.current = true;
+          },
+          ref: focusFirstField,
+        },
       }}
-      onClick={(event) => {
-        if (dismissible && !edited.current && event.target === event.currentTarget) onClose();
-      }}
-      onKeyDown={(event) => {
-        if (!dismissible && event.key === 'Escape') event.preventDefault();
-      }}
-      ref={dialog}
     >
       <div className="p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:p-6">
         <div className="flex items-start justify-between gap-4">
@@ -55,14 +48,10 @@ export function Dialog({
               {title}
             </h2>
           </div>
-          {dismissible && (
-            <button aria-label="Close" className="icon-button -mt-1.5 -mr-2 shrink-0" onClick={onClose} type="button">
-              <Icon name="x" size={18} />
-            </button>
-          )}
+          {dismissible && <IconButton className="-mt-1.5 -mr-2 shrink-0" icon="x" label="Close" onClick={onClose} />}
         </div>
         {children}
       </div>
-    </dialog>
+    </MuiDialog>
   );
 }

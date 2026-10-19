@@ -1,4 +1,8 @@
-import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react';
+import MuiDialog from '@mui/material/Dialog';
+import InputBase from '@mui/material/InputBase';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListSubheader from '@mui/material/ListSubheader';
+import { useEffect, useId, useState, type KeyboardEvent } from 'react';
 import { useLink } from '../UiProvider.js';
 import { Icon } from './Icon.js';
 
@@ -42,7 +46,6 @@ export function CommandPalette({
   query: string;
 }) {
   const Link = useLink();
-  const dialog = useRef<HTMLDialogElement>(null);
   const listId = useId();
   const [active, setActive] = useState(0);
   const groups = [...new Set(items.map((item) => item.group))];
@@ -52,7 +55,6 @@ export function CommandPalette({
 
   useEffect(() => {
     const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    dialog.current?.showModal();
     return () => opener?.focus();
   }, []);
 
@@ -62,7 +64,7 @@ export function CommandPalette({
     document.getElementById(`${listId}-${activeItem?.id}`)?.scrollIntoView?.({ block: 'nearest' });
   }, [activeItem?.id, listId]);
 
-  function move(event: KeyboardEvent<HTMLInputElement>) {
+  function move(event: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) {
     if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
       event.preventDefault();
       if (ordered.length === 0) return;
@@ -75,57 +77,57 @@ export function CommandPalette({
   }
 
   return (
-    <dialog
+    <MuiDialog
       aria-label={label}
-      className="command-palette"
-      onCancel={(event) => {
-        event.preventDefault();
-        onClose();
-      }}
-      onClick={(event) => {
-        if (event.target === event.currentTarget) onClose();
-      }}
-      ref={dialog}
+      disableAutoFocus
+      fullWidth
+      onClose={onClose}
+      open
+      slotProps={{ container: { className: 'items-start' }, paper: { className: 'mt-[12vh]' } }}
     >
       <div className="flex items-center gap-3 border-b border-line px-4">
         <span className="text-faint">
           <Icon name="search" size={18} />
         </span>
-        <input
-          aria-activedescendant={activeItem ? optionId(activeItem) : undefined}
-          aria-autocomplete="list"
-          aria-controls={listId}
-          aria-expanded="true"
-          aria-label={label}
+        <InputBase
           autoFocus
-          className="command-input"
+          className="min-h-14 flex-1"
           onChange={(event) => onQueryChange(event.target.value)}
           onKeyDown={move}
           placeholder={placeholder}
-          role="combobox"
-          type="text"
+          slotProps={{
+            input: {
+              'aria-activedescendant': activeItem ? optionId(activeItem) : undefined,
+              'aria-autocomplete': 'list',
+              'aria-controls': listId,
+              'aria-expanded': true,
+              'aria-label': label,
+              role: 'combobox',
+            },
+          }}
           value={query}
         />
         <kbd className="mono-sm text-faint [@media(hover:none)]:hidden">esc</kbd>
       </div>
-      <div className="command-list" id={listId} role="listbox">
+      <div className="max-h-[min(26rem,60dvh)] overflow-y-auto" id={listId} role="listbox">
         {ordered.length === 0 ? (
           <p className="m-0 px-4 py-6 text-center text-sm text-muted">{emptyLabel}</p>
         ) : (
           groups.map((group) => (
             <div aria-label={group} className="py-1.5" key={group} role="group">
-              <p aria-hidden="true" className="eyebrow m-0 px-4 py-1.5">
+              <ListSubheader aria-hidden="true" component="div">
                 {group}
-              </p>
+              </ListSubheader>
               {ordered
                 .filter((item) => item.group === group)
                 .map((item) => {
                   const props = {
                     'aria-selected': item === activeItem,
-                    className: 'command-option',
+                    className: 'gap-3',
                     id: optionId(item),
                     onMouseMove: () => setActive(ordered.indexOf(item)),
                     role: 'option',
+                    selected: item === activeItem,
                     tabIndex: -1,
                   };
                   const content = (
@@ -135,27 +137,26 @@ export function CommandPalette({
                     </>
                   );
                   return 'href' in item ? (
-                    <Link {...props} href={item.href} key={item.id} onClick={onClose}>
+                    <ListItemButton {...props} component={Link} href={item.href} key={item.id} onClick={onClose}>
                       {content}
-                    </Link>
+                    </ListItemButton>
                   ) : (
-                    <button
+                    <ListItemButton
                       {...props}
                       key={item.id}
                       onClick={() => {
                         onClose();
                         item.onSelect();
                       }}
-                      type="button"
                     >
                       {content}
-                    </button>
+                    </ListItemButton>
                   );
                 })}
             </div>
           ))
         )}
       </div>
-    </dialog>
+    </MuiDialog>
   );
 }

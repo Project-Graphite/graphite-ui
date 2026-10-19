@@ -1,4 +1,5 @@
-import { useLayoutEffect, useRef } from 'react';
+import Tab from '@mui/material/Tab';
+import MuiTabs from '@mui/material/Tabs';
 import { useLink } from '../UiProvider.js';
 
 export interface TabItem {
@@ -9,30 +10,25 @@ export interface TabItem {
 
 export function Tabs({ items, label }: { items: TabItem[]; label: string }) {
   const Link = useLink();
-  const strip = useRef<HTMLElement>(null);
-  const activeHref = items.find((item) => item.active)?.href;
-
-  useLayoutEffect(() => {
-    const nav = strip.current;
-    const tab = nav?.querySelector('[aria-current="page"]');
-    if (!nav || !tab) return;
-    const bounds = nav.getBoundingClientRect();
-    const box = tab.getBoundingClientRect();
-    nav.scrollLeft += Math.min(0, box.left - bounds.left) + Math.max(0, box.right - bounds.right);
-  }, [activeHref]);
-
   return (
-    <nav aria-label={label} className="scroll-x flex gap-2 border-b border-line" ref={strip}>
+    <MuiTabs
+      aria-label={label}
+      className="border-b border-line"
+      role="navigation"
+      scrollButtons="auto"
+      value={items.find((item) => item.active)?.href ?? false}
+      variant="scrollable"
+    >
       {items.map((item) => (
-        <Link
+        <Tab
           aria-current={item.active ? 'page' : undefined}
-          className="tab-link -mb-px"
+          component={Link}
           href={item.href}
           key={item.href}
-        >
-          {item.label}
-        </Link>
+          label={item.label}
+          value={item.href}
+        />
       ))}
-    </nav>
+    </MuiTabs>
   );
 }

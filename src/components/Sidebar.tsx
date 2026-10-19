@@ -1,3 +1,4 @@
+import ListItemButton from '@mui/material/ListItemButton';
 import type { ReactNode } from 'react';
 import { useLink } from '../UiProvider.js';
 import { useShell } from './AppShell.js';
@@ -52,12 +53,14 @@ export function Sidebar({
             <div className="sidebar-section" key={section.label ?? index}>
               {section.label && <p className="sidebar-section-label">{section.label}</p>}
               {section.items.map((item) => (
-                <Link
+                <ListItemButton
                   aria-current={item.active ? 'page' : undefined}
                   aria-label={collapsed ? (item.badge ? `${item.label}, ${item.badge}` : item.label) : undefined}
                   className="sidebar-item"
+                  component={Link}
                   href={item.href}
                   key={item.href}
+                  selected={item.active}
                   title={collapsed ? item.label : undefined}
                 >
                   <span className="sidebar-icon">
@@ -68,7 +71,7 @@ export function Sidebar({
                   {!collapsed && item.badge ? (
                     <span className="mono-sm text-faint">{item.badge > 99 ? '99+' : item.badge}</span>
                   ) : null}
-                </Link>
+                </ListItemButton>
               ))}
             </div>
           ))}

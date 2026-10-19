@@ -1,69 +1,62 @@
-import { useId, type InputHTMLAttributes, type ReactNode, type TextareaHTMLAttributes } from 'react';
+import MuiTextField, { type TextFieldProps } from '@mui/material/TextField';
+import type { InputHTMLAttributes, ReactNode, TextareaHTMLAttributes } from 'react';
 
 export interface TriggerLook {
   quiet?: boolean;
   size?: 'default' | 'small';
 }
 
-export function triggerClass({ quiet = false, size = 'default' }: TriggerLook) {
-  return `select-trigger field-control${size === 'small' ? ' select-trigger-small' : ''}${quiet ? ' select-trigger-quiet' : ''}`;
+interface FieldText {
+  error?: string;
+  hint?: ReactNode;
+  label: ReactNode;
 }
 
-export function describedBy(id: string, error?: string, hint?: ReactNode) {
-  return error ? `${id}-error` : hint ? `${id}-hint` : undefined;
-}
-
-export function FieldMessage({ error, hint, id }: { error?: string; hint?: ReactNode; id: string }) {
-  return error ? (
-    <span className="field-error" id={`${id}-error`}>
-      {error}
-    </span>
-  ) : hint ? (
-    <span className="field-hint" id={`${id}-hint`}>
-      {hint}
-    </span>
-  ) : (
-    <span aria-hidden="true" className="field-slot" />
-  );
-}
-
-export function TextField({
-  className = '',
+function fieldProps({
+  autoComplete,
+  autoFocus,
+  className,
+  defaultValue,
+  disabled,
   error,
   hint,
+  id,
   label,
-  ...input
-}: InputHTMLAttributes<HTMLInputElement> & { error?: string; hint?: ReactNode; label: ReactNode }) {
-  const id = useId();
-  return (
-    <label className={`field-label ${className}`}>
-      {label}
-      <input
-        aria-describedby={describedBy(id, error, hint)}
-        aria-invalid={error ? true : undefined}
-        {...input}
-      />
-      <FieldMessage error={error} hint={hint} id={id} />
-    </label>
-  );
+  name,
+  onBlur,
+  onChange,
+  onFocus,
+  placeholder,
+  required,
+  value,
+  ...htmlInput
+}: (InputHTMLAttributes<HTMLInputElement> | TextareaHTMLAttributes<HTMLTextAreaElement>) & FieldText): TextFieldProps {
+  return {
+    autoComplete,
+    autoFocus,
+    className,
+    defaultValue,
+    disabled,
+    error: Boolean(error),
+    fullWidth: true,
+    helperText: error ?? hint,
+    id,
+    label,
+    name,
+    onBlur,
+    onChange,
+    onFocus,
+    placeholder,
+    required,
+    slotProps: { htmlInput: { 'aria-invalid': error ? true : undefined, ...htmlInput } },
+    value,
+  };
 }
 
-export function TextAreaField({
-  error,
-  hint,
-  label,
-  ...textarea
-}: TextareaHTMLAttributes<HTMLTextAreaElement> & { error?: string; hint?: ReactNode; label: ReactNode }) {
-  const id = useId();
-  return (
-    <label className="field-label">
-      {label}
-      <textarea
-        aria-describedby={describedBy(id, error, hint)}
-        aria-invalid={error ? true : undefined}
-        {...textarea}
-      />
-      <FieldMessage error={error} hint={hint} id={id} />
-    </label>
-  );
+export function TextField({ type, ...props }: InputHTMLAttributes<HTMLInputElement> & FieldText) {
+  return <MuiTextField {...fieldProps(props)} type={type} />;
+}
+
+export function TextAreaField({ rows, ...props }: TextareaHTMLAttributes<HTMLTextAreaElement> & FieldText) {
+  return <MuiTextField {...fieldProps(props)} minRows={rows} multiline />;
 }

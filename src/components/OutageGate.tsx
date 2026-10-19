@@ -1,4 +1,5 @@
 import { useEffect, useState, type ReactNode } from 'react';
+import { Button } from './Button.js';
 
 const firstRetryMs = 3_000;
 const longestRetryMs = 15_000;
@@ -70,9 +71,9 @@ function OutagePage({
           : 'The server is probably being updated. This usually takes under a minute, and the page reloads by itself once it is back.'}
       </p>
       <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-        <button className="primary-button" disabled={checking} onClick={() => void retry()} type="button">
+        <Button disabled={checking} onClick={() => void retry()} variant="primary">
           {checking ? 'Checking…' : 'Try again now'}
-        </button>
+        </Button>
         <span aria-live="polite" className="mono-sm text-faint">
           {checking ? 'checking the server' : `retrying automatically · attempt ${attempt + 1}`}
         </span>

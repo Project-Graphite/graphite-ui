@@ -1,6 +1,9 @@
-import { useLayoutEffect, useRef, type KeyboardEvent, type ReactNode } from 'react';
-import { useAnchoredPanel } from '../lib/useAnchoredPanel.js';
+import Divider from '@mui/material/Divider';
+import MuiMenu from '@mui/material/Menu';
+import MenuItemBase from '@mui/material/MenuItem';
+import { useState, type ReactNode } from 'react';
 import { useLink } from '../UiProvider.js';
+import { Trigger, type TriggerVariant } from './Trigger.js';
 
 export type MenuItem = { label: string; separated?: boolean } & (
   | { href: string }
@@ -14,6 +17,7 @@ export function Menu({
   trigger,
   triggerClassName = 'avatar-button',
   triggerLabel,
+  triggerVariant,
 }: {
   header?: ReactNode;
   items: MenuItem[];
@@ -21,80 +25,56 @@ export function Menu({
   trigger: ReactNode;
   triggerClassName?: string;
   triggerLabel: string;
+  triggerVariant?: TriggerVariant;
 }) {
   const Link = useLink();
-  const { close, open, panel, root, setOpen, trigger: button } = useAnchoredPanel<HTMLButtonElement, HTMLDivElement>(240, 'end');
-  const openedFromKeyboard = useRef(false);
-
-  useLayoutEffect(() => {
-    if (!open) return;
-    const first = panel.current?.querySelector<HTMLElement>('[role="menuitem"]');
-    (openedFromKeyboard.current ? first : panel.current)?.focus({ preventScroll: true });
-  }, [open, panel]);
-
-  function move(event: KeyboardEvent<HTMLDivElement>) {
-    const options = [...(panel.current?.querySelectorAll<HTMLElement>('[role="menuitem"]') ?? [])];
-    const current = options.indexOf(document.activeElement as HTMLElement);
-    if (event.key === 'Escape') {
-      event.preventDefault();
-      close();
-      button.current?.focus();
-    } else if (event.key === 'Tab') {
-      close();
-    } else if (['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
-      event.preventDefault();
-      const target =
-        event.key === 'Home'
-          ? 0
-          : event.key === 'End'
-            ? options.length - 1
-            : (current + (event.key === 'ArrowDown' ? 1 : -1) + options.length) % options.length;
-      options[target]?.focus();
-    }
-  }
+  const [anchor, setAnchor] = useState<HTMLElement | null>(null);
+  const close = () => setAnchor(null);
 
   return (
-    <div className="relative" ref={root}>
-      <button
-        aria-expanded={open}
-        aria-haspopup="menu"
-        aria-label={triggerLabel}
-        className={triggerClassName}
+    <>
+      <Trigger
+        className={triggerVariant ? undefined : triggerClassName}
+        expanded={Boolean(anchor)}
+        haspopup="menu"
+        label={triggerLabel}
         onClick={(event) => {
-          openedFromKeyboard.current = event.detail === 0;
-          setOpen((current) => !current);
+          const target = event.currentTarget;
+          setAnchor((current) => (current ? null : target));
         }}
-        ref={button}
-        type="button"
+        variant={triggerVariant}
       >
         {trigger}
-      </button>
-      {open && (
-        <div aria-label={label} className="popover-panel menu-panel" onKeyDown={move} popover="manual" ref={panel} role="menu" tabIndex={-1}>
-          {header}
-          {items.map((item) => {
-            const className = `menu-item ${item.separated ? 'border-t border-line' : ''}`;
-            return 'href' in item ? (
-              <Link className={className} href={item.href} key={item.label} onClick={close} role="menuitem">
-                {item.label}
-              </Link>
-            ) : (
-              <button
-                className={className}
-                key={item.label}
-                onClick={() => {
-                  close();
-                  item.onSelect();
-                }}
-                role="menuitem"
-                type="button"
-              >
-                {item.label}
-              </button>
-            );
-          })}
-        </div>
-      )}
-    </div>
+      </Trigger>
+      <MuiMenu
+        anchorEl={anchor}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        onClose={close}
+        open={Boolean(anchor)}
+        slotProps={{ list: { 'aria-label': label }, paper: { className: 'min-w-60' } }}
+        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+        variant="menu"
+      >
+        {header && <li role="none">{header}</li>}
+        {items.flatMap((item) => [
+          ...(item.separated ? [<Divider key={`${item.label}-divider`} />] : []),
+          'href' in item ? (
+            <MenuItemBase component={Link} href={item.href} key={item.label} onClick={close}>
+              {item.label}
+            </MenuItemBase>
+          ) : (
+            <MenuItemBase
+              key={item.label}
+              onClick={() => {
+                close();
+                item.onSelect();
+              }}
+            >
+              {item.label}
+            </MenuItemBase>
+          ),
+        ])}
+      </MuiMenu>
+    </>
   );
 }

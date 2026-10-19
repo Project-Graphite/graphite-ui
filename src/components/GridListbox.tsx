@@ -1,8 +1,11 @@
-import { useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEvent } from 'react';
+import MuiPopover from '@mui/material/Popover';
+import { Fragment, useRef, useState, type KeyboardEvent } from 'react';
+import { Button } from './Button.js';
+import { PickerField } from './PickerField.js';
 
 export interface GridGroup {
   label: string;
-  options: Array<{ label: string; value: string }>;
+  options: Array<{ label: string; value: string; wide?: boolean }>;
 }
 
 export function GridListbox({
@@ -23,45 +26,33 @@ export function GridListbox({
   const [value, setValue] = useState(defaultValue);
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLDivElement>(null);
-  const trigger = useRef<HTMLButtonElement>(null);
+  const field = useRef<HTMLInputElement>(null);
   const listbox = useRef<HTMLDivElement>(null);
-  const labelId = useId();
   const selectedLabel = groups.flatMap((group) => group.options).find((option) => option.value === value)?.label;
 
-  useEffect(() => {
-    if (!open) return;
+  function focusSelected() {
     const selected =
       listbox.current?.querySelector<HTMLElement>('[aria-selected="true"]') ??
       listbox.current?.querySelector<HTMLElement>('[role="option"]');
-    const panel = listbox.current;
-    if (selected && panel) {
-      panel.scrollTop = selected.offsetTop - (panel.clientHeight - selected.offsetHeight) / 2;
-      selected.focus({ preventScroll: true });
-    }
-    const close = (event: PointerEvent) => {
-      if (!root.current?.contains(event.target as Node)) setOpen(false);
-    };
-    document.addEventListener('pointerdown', close);
-    return () => document.removeEventListener('pointerdown', close);
-  }, [open]);
+    selected?.scrollIntoView({ block: 'center' });
+    selected?.focus({ preventScroll: true });
+  }
+
+  function close() {
+    setOpen(false);
+    field.current?.focus();
+  }
 
   function choose(next: string) {
     setValue(next);
-    setOpen(false);
-    trigger.current?.focus();
+    close();
   }
 
   function move(event: KeyboardEvent<HTMLDivElement>) {
     const options = [...(listbox.current?.querySelectorAll<HTMLElement>('[role="option"]') ?? [])];
     const current = options.indexOf(document.activeElement as HTMLElement);
     const step = { ArrowRight: 1, ArrowLeft: -1, ArrowDown: columns, ArrowUp: -columns }[event.key];
-    if (event.key === 'Escape') {
-      event.preventDefault();
-      setOpen(false);
-      trigger.current?.focus();
-    } else if (event.key === 'Tab') {
-      setOpen(false);
-    } else if (step !== undefined || event.key === 'Home' || event.key === 'End') {
+    if (step !== undefined || event.key === 'Home' || event.key === 'End') {
       event.preventDefault();
       const target =
         event.key === 'Home'
@@ -73,66 +64,58 @@ export function GridListbox({
     }
   }
 
+  const option = (optionValue: string, optionLabel: string, className?: string) => (
+    <Button
+      aria-selected={value === optionValue}
+      className={className}
+      key={optionValue}
+      onClick={() => choose(optionValue)}
+      role="option"
+      size="small"
+      variant={value === optionValue ? 'primary' : 'text'}
+    >
+      {optionLabel}
+    </Button>
+  );
+
   return (
-    <div className="field-label" ref={root}>
-      <span id={labelId}>{label}</span>
-      <div className="relative">
-        <input name={name} type="hidden" value={value} />
-        <button
-          aria-expanded={open}
-          aria-haspopup="listbox"
-          aria-labelledby={labelId}
-          className="select-trigger"
-          onClick={() => setOpen((current) => !current)}
-          ref={trigger}
-          type="button"
+    <>
+      <PickerField
+        fieldRef={field}
+        haspopup="listbox"
+        icon="chevron-down"
+        label={label}
+        onOpen={() => setOpen(true)}
+        open={open}
+        rootRef={root}
+        value={selectedLabel ?? emptyLabel}
+      />
+      <input name={name} type="hidden" value={value} />
+      <MuiPopover
+        anchorEl={() => root.current!}
+        anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+        disableAutoFocus
+        onClose={close}
+        open={open}
+        slotProps={{ paper: { className: 'max-h-80 w-[22rem] max-w-[calc(100vw-2rem)] p-3' }, transition: { onEntered: focusSelected } }}
+      >
+        <div
+          aria-label={label}
+          className="grid gap-1"
+          onKeyDown={move}
+          ref={listbox}
+          role="listbox"
+          style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
         >
-          <span className={value ? 'text-ink' : 'text-faint'}>{selectedLabel ?? emptyLabel}</span>
-          <svg aria-hidden="true" className="chevron" fill="none" height="16" viewBox="0 0 24 24" width="16">
-            <path d="m6 9 6 6 6-6" stroke="currentColor" strokeLinecap="round" strokeWidth="2" />
-          </svg>
-        </button>
-        {open && (
-          <>
-            <div aria-hidden="true" className="sheet-backdrop" onClick={() => setOpen(false)} />
-            <div
-              aria-labelledby={labelId}
-              className="popover-panel grid-listbox"
-              onKeyDown={move}
-              ref={listbox}
-              role="listbox"
-              style={{ '--grid-columns': columns } as CSSProperties}
-            >
-              <button
-                aria-selected={value === ''}
-                className="grid-option col-span-full"
-                onClick={() => choose('')}
-                role="option"
-                type="button"
-              >
-                {emptyLabel}
-              </button>
-              {groups.map((group) => (
-                <div className="contents" key={group.label}>
-                  <p className="eyebrow col-span-full mt-3 mb-1">{group.label}</p>
-                  {group.options.map((option) => (
-                    <button
-                      aria-selected={value === option.value}
-                      className="grid-option"
-                      key={option.value}
-                      onClick={() => choose(option.value)}
-                      role="option"
-                      type="button"
-                    >
-                      {option.label}
-                    </button>
-                  ))}
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-      </div>
-    </div>
+          {option('', emptyLabel, 'col-span-full')}
+          {groups.map((group) => (
+            <Fragment key={group.label}>
+              <p className="eyebrow col-span-full mt-3 mb-1">{group.label}</p>
+              {group.options.map((item) => option(item.value, item.label, item.wide ? 'col-span-full' : undefined))}
+            </Fragment>
+          ))}
+        </div>
+      </MuiPopover>
+    </>
   );
 }
