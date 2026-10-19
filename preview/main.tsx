@@ -1,3 +1,9 @@
+import Alert from '@mui/material/Alert';
+import Badge from '@mui/material/Badge';
+import MuiLink from '@mui/material/Link';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
 import { StrictMode, useCallback, useState, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
@@ -83,20 +89,12 @@ function SnackbarDemo() {
   const show = useSnackbar();
   return (
     <div className="flex flex-wrap gap-3">
-      <button
-        className="secondary-button inline-flex w-fit"
-        onClick={() => show({ message: 'Saved to your library', detail: 'just now', action: { label: 'open', href: '#snackbar' } })}
-        type="button"
-      >
+      <Button onClick={() => show({ message: 'Saved to your library', detail: 'just now', action: { label: 'open', href: '#snackbar' } })}>
         Show a snackbar
-      </button>
-      <button
-        className="secondary-button inline-flex w-fit"
-        onClick={() => show({ message: 'Note deleted', action: { label: 'undo', onSelect: () => show({ message: 'Note restored' }) } })}
-        type="button"
-      >
+      </Button>
+      <Button onClick={() => show({ message: 'Note deleted', action: { label: 'undo', onSelect: () => show({ message: 'Note restored' }) } })}>
         Show an undo snackbar
-      </button>
+      </Button>
     </div>
   );
 }
@@ -114,25 +112,33 @@ function Preview() {
     <AppShell
       actions={
         <>
-          <Popover label="Notifications" trigger={<Icon name="bell" />} triggerLabel="Notifications, 2 unread">
+          <Popover
+            label="Notifications"
+            trigger={
+              <Badge badgeContent={2} color="primary">
+                <Icon name="bell" />
+              </Badge>
+            }
+            triggerLabel="Notifications, 2 unread"
+          >
             {(close) => (
               <>
                 <div className="flex items-center justify-between gap-3 border-b border-line px-4 py-3">
                   <h2 className="m-0 text-base font-medium">Notifications</h2>
-                  <button className="text-button mono-sm" onClick={close} type="button">
+                  <Button className="mono-sm" onClick={close} size="small" variant="text">
                     mark all read
-                  </button>
+                  </Button>
                 </div>
-                <ul className="popover-list-body m-0 list-none p-0">
+                <List disablePadding>
                   {['New chapter', 'New episode'].map((title) => (
-                    <li key={title}>
-                      <a className="popover-row" href="#popover" onClick={close}>
+                    <ListItem disablePadding divider key={title}>
+                      <ListItemButton className="gap-3.5 px-4 py-3" href="#popover" onClick={close}>
                         <span className="unread-dot" />
                         <span className="text-sm">{title}</span>
-                      </a>
-                    </li>
+                      </ListItemButton>
+                    </ListItem>
                   ))}
-                </ul>
+                </List>
               </>
             )}
           </Popover>
@@ -197,14 +203,13 @@ function Preview() {
           <Button icon="trash" variant="danger">
             Delete
           </Button>
-          <a className="rule-link" href="#buttons">
+          <MuiLink href="#buttons" underline="always">
             rule link
-          </a>
+          </MuiLink>
           <IconButton icon="filter" label="Filter" />
-          <button aria-label="Filter" className="icon-button" type="button">
-            <Icon name="filter" />
-            <span className="count-badge">3</span>
-          </button>
+          <Badge badgeContent={3} color="primary">
+            <IconButton icon="filter" label="Filter, 3 active" />
+          </Badge>
         </div>
         <div className="flex gap-4">
           {icons.map((name) => (
@@ -212,14 +217,6 @@ function Preview() {
               <Icon name={name} />
             </span>
           ))}
-        </div>
-        <div className="flex border-b border-line">
-          <a aria-current="page" className="tab-link" href="#buttons">
-            Active tab
-          </a>
-          <a className="tab-link" href="#buttons">
-            Tab
-          </a>
         </div>
       </Section>
 
@@ -290,19 +287,15 @@ function Preview() {
             <Meter label="Half way" value={0.5} />
             <Meter label="Over budget" value={1.2} />
           </div>
-          <p className="notice m-0">A notice explains something calmly.</p>
-          <p className="error-message m-0">Something went wrong. Try again.</p>
+          <Alert severity="info">A notice explains something calmly.</Alert>
+          <Alert severity="error">Something went wrong. Try again.</Alert>
         </div>
       </Section>
 
       <Section title="Dialogs">
         <div className="flex flex-wrap gap-3">
-          <button className="secondary-button inline-flex" onClick={() => setDialog('plain')} type="button">
-            Open dialog
-          </button>
-          <button className="secondary-button inline-flex" onClick={() => setDialog('confirm')} type="button">
-            Open confirm dialog
-          </button>
+          <Button onClick={() => setDialog('plain')}>Open dialog</Button>
+          <Button onClick={() => setDialog('confirm')}>Open confirm dialog</Button>
         </div>
         {dialog === 'plain' && (
           <Dialog onClose={() => setDialog(null)} title="A plain dialog">
@@ -360,9 +353,9 @@ function Preview() {
             ]}
           />
         </div>
-        <button className="secondary-button inline-flex w-fit" onClick={openPalette} type="button">
+        <Button className="w-fit" onClick={openPalette}>
           Open command palette (Ctrl+K)
-        </button>
+        </Button>
         {palette && (
           <CommandPalette
             items={commands.filter((command) => command.label.toLowerCase().includes(query.toLowerCase()))}
@@ -383,22 +376,21 @@ function Preview() {
       <Section title="Pagination">
         <Pagination page={page} pageHref={(next) => `#pagination-${next}`} totalPages={7} />
         <div className="flex gap-3">
-          <button className="text-button mono-sm" onClick={() => setPage((current) => Math.max(1, current - 1))} type="button">
+          <Button className="mono-sm" onClick={() => setPage((current) => Math.max(1, current - 1))} size="small" variant="text">
             previous page
-          </button>
-          <button className="text-button mono-sm" onClick={() => setPage((current) => Math.min(7, current + 1))} type="button">
+          </Button>
+          <Button className="mono-sm" onClick={() => setPage((current) => Math.min(7, current + 1))} size="small" variant="text">
             next page
-          </button>
+          </Button>
         </div>
       </Section>
 
       <Section title="Page header">
         <PageHeader
           actions={
-            <button className="secondary-button px-3 py-2 text-sm" type="button">
-              <Icon name="plus" size={16} />
+            <Button icon="plus" size="small">
               New
-            </button>
+            </Button>
           }
           eyebrow="Shared space · owner"
           title="Home"
@@ -433,13 +425,9 @@ function Preview() {
             };
           }}
         >
-          <button
-            className="secondary-button inline-flex w-fit"
-            onClick={() => outageListeners.forEach((listener) => listener())}
-            type="button"
-          >
+          <Button className="w-fit" onClick={() => outageListeners.forEach((listener) => listener())}>
             Simulate an outage
-          </button>
+          </Button>
         </OutageGate>
       </Section>
     </AppShell>
