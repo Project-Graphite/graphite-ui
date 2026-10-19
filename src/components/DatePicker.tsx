@@ -1,11 +1,9 @@
 import MuiIconButton from '@mui/material/IconButton';
-import InputAdornment from '@mui/material/InputAdornment';
 import MuiPopover from '@mui/material/Popover';
-import MuiTextField from '@mui/material/TextField';
 import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
 import { Button, IconButton } from './Button.js';
 import type { TriggerLook } from './Field.js';
-import { Icon } from './Icon.js';
+import { PickerField } from './PickerField.js';
 
 const dayMs = 86_400_000;
 
@@ -123,42 +121,23 @@ export function DatePicker({
 
   return (
     <>
-      <MuiTextField
+      <PickerField
+        aria-label={ariaLabel}
         className={className}
         disabled={disabled}
-        error={Boolean(error)}
-        fullWidth={Boolean(label)}
-        helperText={error ?? hint}
-        inputRef={field}
+        error={error}
+        fieldRef={field}
+        haspopup="dialog"
+        hint={hint}
+        icon="calendar"
         label={label}
-        onClick={show}
+        onOpen={show}
+        open={open}
         placeholder={placeholder}
-        ref={root}
-        size={size === 'small' ? 'small' : 'medium'}
-        slotProps={{
-          htmlInput: {
-            'aria-expanded': open,
-            'aria-haspopup': 'dialog',
-            'aria-label': ariaLabel,
-            className: 'cursor-pointer',
-            onKeyDown: (event: KeyboardEvent<HTMLInputElement>) => {
-              if (['ArrowDown', 'Enter', ' '].includes(event.key)) {
-                event.preventDefault();
-                show();
-              }
-            },
-            readOnly: true,
-          },
-          input: {
-            endAdornment: (
-              <InputAdornment position="end">
-                <Icon name="calendar" size={18} />
-              </InputAdornment>
-            ),
-          },
-        }}
+        quiet={quiet}
+        rootRef={root}
+        size={size}
         value={valid(current) ? formatDay(current) : ''}
-        variant={quiet ? 'standard' : 'outlined'}
       />
       <input name={name} ref={hidden} type="hidden" value={current} />
       <MuiPopover

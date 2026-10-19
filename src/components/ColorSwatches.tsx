@@ -1,3 +1,7 @@
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
+import MuiRadio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
 import type { ReactNode } from 'react';
 import { tagColors, type TagColor } from './TagChip.js';
 
@@ -15,25 +19,26 @@ export function ColorSwatches({
   value?: TagColor;
 }) {
   return (
-    <fieldset className="field-label m-0 border-0 p-0">
-      <legend className="mb-1.5 p-0">{label}</legend>
-      <div className="swatches">
+    <FormControl component="fieldset">
+      <FormLabel component="legend">{label}</FormLabel>
+      <RadioGroup
+        defaultValue={value === undefined ? (defaultValue ?? 'gray') : undefined}
+        name={name}
+        onChange={(event) => onChange?.(event.target.value as TagColor)}
+        row
+        value={value}
+      >
         {tagColors.map((color) => (
-          <label className="swatch" key={color} title={color}>
-            <input
-              aria-label={color}
-              checked={value === undefined ? undefined : value === color}
-              className="sr-only"
-              defaultChecked={value === undefined ? (defaultValue ?? 'gray') === color : undefined}
-              name={name}
-              onChange={() => onChange?.(color)}
-              type="radio"
-              value={color}
-            />
-            <span aria-hidden="true" className={`swatch-dot tag-${color}`} />
-          </label>
+          <MuiRadio
+            checkedIcon={<span className={`swatch-dot tag-${color} ring-2 ring-ink ring-offset-2 ring-offset-paper`} />}
+            icon={<span className={`swatch-dot tag-${color}`} />}
+            key={color}
+            slotProps={{ input: { 'aria-label': color } }}
+            title={color}
+            value={color}
+          />
         ))}
-      </div>
-    </fieldset>
+      </RadioGroup>
+    </FormControl>
   );
 }
