@@ -1,5 +1,6 @@
 import MuiPopover from '@mui/material/Popover';
 import { useState, type ReactNode } from 'react';
+import { Trigger, type TriggerVariant } from './Trigger.js';
 
 export function Popover({
   align = 'end',
@@ -7,8 +8,9 @@ export function Popover({
   label,
   panelClassName = 'popover-list',
   trigger,
-  triggerClassName = 'icon-button',
+  triggerClassName,
   triggerLabel,
+  triggerVariant = triggerClassName ? undefined : 'icon',
 }: {
   align?: 'start' | 'end';
   children: (close: () => void) => ReactNode;
@@ -17,6 +19,7 @@ export function Popover({
   trigger: ReactNode;
   triggerClassName?: string;
   triggerLabel: string;
+  triggerVariant?: TriggerVariant;
 }) {
   const [anchor, setAnchor] = useState<HTMLElement | null>(null);
   const close = () => setAnchor(null);
@@ -24,19 +27,19 @@ export function Popover({
 
   return (
     <>
-      <button
-        aria-expanded={Boolean(anchor)}
-        aria-haspopup="dialog"
-        aria-label={triggerLabel}
+      <Trigger
         className={triggerClassName}
+        expanded={Boolean(anchor)}
+        haspopup="dialog"
+        label={triggerLabel}
         onClick={(event) => {
           const target = event.currentTarget;
           setAnchor((current) => (current ? null : target));
         }}
-        type="button"
+        variant={triggerVariant}
       >
         {trigger}
-      </button>
+      </Trigger>
       <MuiPopover
         anchorEl={anchor}
         anchorOrigin={{ horizontal, vertical: 'bottom' }}

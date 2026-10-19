@@ -3,6 +3,7 @@ import MuiMenu from '@mui/material/Menu';
 import MenuItemBase from '@mui/material/MenuItem';
 import { useState, type ReactNode } from 'react';
 import { useLink } from '../UiProvider.js';
+import { Trigger, type TriggerVariant } from './Trigger.js';
 
 export type MenuItem = { label: string; separated?: boolean } & (
   | { href: string }
@@ -16,6 +17,7 @@ export function Menu({
   trigger,
   triggerClassName = 'avatar-button',
   triggerLabel,
+  triggerVariant,
 }: {
   header?: ReactNode;
   items: MenuItem[];
@@ -23,6 +25,7 @@ export function Menu({
   trigger: ReactNode;
   triggerClassName?: string;
   triggerLabel: string;
+  triggerVariant?: TriggerVariant;
 }) {
   const Link = useLink();
   const [anchor, setAnchor] = useState<HTMLElement | null>(null);
@@ -30,19 +33,19 @@ export function Menu({
 
   return (
     <>
-      <button
-        aria-expanded={Boolean(anchor)}
-        aria-haspopup="menu"
-        aria-label={triggerLabel}
-        className={triggerClassName}
+      <Trigger
+        className={triggerVariant ? undefined : triggerClassName}
+        expanded={Boolean(anchor)}
+        haspopup="menu"
+        label={triggerLabel}
         onClick={(event) => {
           const target = event.currentTarget;
           setAnchor((current) => (current ? null : target));
         }}
-        type="button"
+        variant={triggerVariant}
       >
         {trigger}
-      </button>
+      </Trigger>
       <MuiMenu
         anchorEl={anchor}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}

@@ -4,6 +4,7 @@ import {
   AppShell,
   Avatar,
   Button,
+  Checkbox,
   CodeInput,
   ColorSwatches,
   CommandPalette,
@@ -24,6 +25,7 @@ import {
   PageHeader,
   Pagination,
   Popover,
+  Radio,
   Sidebar,
   Select,
   SuggestField,
@@ -254,6 +256,11 @@ function Preview() {
             <Select aria-label="Group by" defaultValue="status" options={[{ value: 'status', label: 'Status' }, { value: 'owner', label: 'Owner' }]} size="small" />
             <DatePicker aria-label="Due" quiet size="small" />
             <TimePicker aria-label="At" quiet size="small" />
+          </div>
+          <div className="flex flex-wrap gap-4">
+            <Checkbox defaultChecked label="Remember this choice" name="remember" />
+            <Radio defaultChecked label="Bookmark" name="saveAs" value="bookmark" />
+            <Radio label="Task" name="saveAs" value="task" />
           </div>
           <ColorSwatches defaultValue="teal" label="Colour" name="color" />
           <GridListbox
