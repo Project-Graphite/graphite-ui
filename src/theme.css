@@ -774,9 +774,12 @@ body {
       color 140ms ease;
   }
 
-  .sidebar[data-collapsed='true'] .sidebar-item {
-    justify-content: center;
-    padding-inline: 0;
+  .sidebar-text {
+    transition: opacity 160ms ease;
+  }
+
+  .sidebar[data-collapsed='true'] .sidebar-text {
+    opacity: 0;
   }
 
   .sidebar-icon {
