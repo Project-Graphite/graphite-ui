@@ -9,6 +9,7 @@ export interface SelectOption<T extends string = string> {
   label: string;
   hint?: string;
   leading?: ReactNode;
+  disabled?: boolean;
 }
 
 function OptionContent({ option }: { option: SelectOption }) {
@@ -92,6 +93,7 @@ export function Select<T extends string = string>({
             const words = state.inputValue.trim().toLowerCase();
             return words ? list.filter((option) => `${option.label} ${option.hint ?? ''} ${option.value}`.toLowerCase().includes(words)) : list;
           }}
+          getOptionDisabled={(option) => Boolean(option.disabled)}
           getOptionLabel={(option) => option.label}
           isOptionEqualToValue={(option, chosen) => option.value === chosen.value}
           noOptionsText={`Nothing matches “${query}”.`}
@@ -142,7 +144,7 @@ export function Select<T extends string = string>({
       value={current}
     >
       {options.map((option) => (
-        <MenuItem className="gap-2" key={option.value} value={option.value}>
+        <MenuItem className="gap-2" disabled={option.disabled} key={option.value} value={option.value}>
           <OptionContent option={option} />
         </MenuItem>
       ))}
