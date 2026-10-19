@@ -1,5 +1,8 @@
+import BottomNavigation from '@mui/material/BottomNavigation';
+import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import { createContext, useContext, useState, type CSSProperties, type ReactNode } from 'react';
 import { useLink } from '../UiProvider.js';
+import { IconButton } from './Button.js';
 import { Icon, type IconName } from './Icon.js';
 import { Skeleton } from './Skeleton.js';
 
@@ -73,17 +76,14 @@ export function AppShell({
         <header className="sticky top-0 z-20 h-(--header-height) border-b border-line-soft bg-paper/90 pr-[env(safe-area-inset-right)] pl-[env(safe-area-inset-left)] backdrop-blur-md">
           <div className={sidebar ? 'shell-bar flex h-full items-center gap-2' : 'shell flex h-full items-center gap-6'}>
             {sidebar && (
-              <button
+              <IconButton
                 aria-controls="app-sidebar"
                 aria-expanded={!collapsed}
-                aria-label={collapsed ? 'Expand the sidebar' : 'Collapse the sidebar'}
-                className="sidebar-toggle hidden md:inline-flex"
+                className="hidden md:inline-flex"
+                icon="panel"
+                label={collapsed ? 'Expand the sidebar' : 'Collapse the sidebar'}
                 onClick={toggle}
-                title={collapsed ? 'Expand the sidebar' : 'Collapse the sidebar'}
-                type="button"
-              >
-                <Icon name="panel" size={18} />
-              </button>
+              />
             )}
             <Link
               className="flex shrink-0 items-center gap-2.5 text-lg font-semibold tracking-tight text-ink no-underline"
@@ -130,26 +130,38 @@ export function AppShell({
             {footer}
           </>
         )}
-        <nav aria-label="Main" className="tab-bar md:hidden" style={{ '--tab-count': tabs.length } as CSSProperties}>
+        <BottomNavigation
+          aria-label="Main"
+          className="tab-bar md:hidden"
+          component="nav"
+          showLabels
+          style={{ '--tab-count': tabs.length } as CSSProperties}
+          value={tabs.find((tab) => tab.active)?.href ?? null}
+        >
           {tabs.map((tab) =>
             tab.loading ? (
-              <span aria-hidden="true" className="tab-bar-item" key={tab.label}>
-                <Skeleton className="h-[22px] w-[22px] rounded-full" />
-                <Skeleton className="h-2.5 w-10" />
-              </span>
-            ) : (
-              <Link
-                aria-current={tab.active ? 'page' : undefined}
-                className="tab-bar-item"
-                href={tab.href}
+              <BottomNavigationAction
+                aria-hidden="true"
+                className="min-w-0"
+                disabled
+                icon={<Skeleton className="h-[22px] w-[22px] rounded-full" />}
                 key={tab.label}
-              >
-                <Icon name={tab.icon} size={22} />
-                <span>{tab.label}</span>
-              </Link>
+                label={<Skeleton className="mt-1 h-2.5 w-10" />}
+              />
+            ) : (
+              <BottomNavigationAction
+                aria-current={tab.active ? 'page' : undefined}
+                className="min-w-0"
+                component={Link}
+                href={tab.href}
+                icon={<Icon name={tab.icon} size={22} />}
+                key={tab.label}
+                label={tab.label}
+                value={tab.href}
+              />
             ),
           )}
-        </nav>
+        </BottomNavigation>
       </div>
     </ShellContext.Provider>
   );

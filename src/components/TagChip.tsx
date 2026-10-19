@@ -1,3 +1,4 @@
+import Chip from '@mui/material/Chip';
 import { useLink } from '../UiProvider.js';
 
 export const tagColors = ['gray', 'red', 'orange', 'yellow', 'green', 'teal', 'blue', 'purple', 'pink'] as const;
@@ -16,26 +17,13 @@ export function TagChip({
   onRemove?: () => void;
 }) {
   const Link = useLink();
-  const content = (
-    <>
-      <span aria-hidden="true" className="tag-dot" />
-      {label}
-    </>
-  );
-  return (
-    <span className={`tag-chip tag-${color}`}>
-      {href ? (
-        <Link className="tag-chip-label" href={href}>
-          {content}
-        </Link>
-      ) : (
-        <span className="tag-chip-label">{content}</span>
-      )}
-      {onRemove && (
-        <button aria-label={`Remove ${label}`} className="tag-chip-remove" onClick={onRemove} type="button">
-          ×
-        </button>
-      )}
-    </span>
-  );
+  const chip = {
+    className: `tag-chip tag-${color}`,
+    icon: <span aria-hidden="true" className="tag-dot ml-2" />,
+    label,
+    onDelete: onRemove,
+    size: 'small',
+    variant: 'outlined',
+  } as const;
+  return href ? <Chip {...chip} clickable component={Link} href={href} /> : <Chip {...chip} />;
 }

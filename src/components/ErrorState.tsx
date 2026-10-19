@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { Button } from './Button.js';
 import { Icon } from './Icon.js';
 
 export function ErrorState({
@@ -22,10 +23,9 @@ export function ErrorState({
       {(onRetry || action) && (
         <div className="mt-2 flex flex-wrap justify-center gap-2">
           {onRetry && (
-            <button className="secondary-button px-3 py-2 text-sm" onClick={onRetry} type="button">
-              <Icon name="refresh" size={16} />
+            <Button icon="refresh" onClick={onRetry} size="small">
               Try again
-            </button>
+            </Button>
           )}
           {action}
         </div>

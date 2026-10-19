@@ -1,3 +1,5 @@
+import MuiPagination from '@mui/material/Pagination';
+import PaginationItem from '@mui/material/PaginationItem';
 import { useLink } from '../UiProvider.js';
 
 export function Pagination({
@@ -18,28 +20,11 @@ export function Pagination({
   }
 
   return (
-    <nav aria-label="Pagination" className="mt-8 flex items-center justify-between gap-4 border-t border-line pt-5">
-      {page > 1 ? (
-        <Link className="secondary-button inline-flex" href={pageHref(page - 1)} rel="prev">
-          Previous
-        </Link>
-      ) : (
-        <span aria-disabled="true" className="secondary-button inline-flex opacity-50">
-          Previous
-        </span>
-      )}
-      <span className="mono-sm text-faint">
-        Page {page.toLocaleString()} of {lastPage.toLocaleString()}
-      </span>
-      {page < lastPage ? (
-        <Link className="secondary-button inline-flex" href={pageHref(page + 1)} rel="next">
-          Next
-        </Link>
-      ) : (
-        <span aria-disabled="true" className="secondary-button inline-flex opacity-50">
-          Next
-        </span>
-      )}
-    </nav>
+    <MuiPagination
+      className="mt-8 flex justify-center border-t border-line pt-5"
+      count={lastPage}
+      page={page}
+      renderItem={(item) => <PaginationItem component={Link} href={pageHref(item.page ?? page)} {...item} />}
+    />
   );
 }
