@@ -1,6 +1,6 @@
 {
   "name": "@project-graphite/ui",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Project Graphite design tokens, theme and React components.",
   "license": "MIT",
   "repository": {
@@ -28,6 +28,7 @@
     "preview:dev": "vite --config preview/vite.config.ts"
   },
   "peerDependencies": {
+    "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/material": "^9.5.0",
@@ -35,6 +36,7 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@emotion/cache": "11.14.0",
     "@emotion/react": "11.14.0",
     "@emotion/styled": "11.14.1",
     "@mui/material": "9.5.0",
