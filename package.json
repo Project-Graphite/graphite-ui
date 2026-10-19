@@ -1,6 +1,6 @@
 {
   "name": "@project-graphite/ui",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Project Graphite design tokens, theme and React components.",
   "license": "MIT",
   "repository": {

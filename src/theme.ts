@@ -26,6 +26,9 @@ export function createGraphiteTheme(link: ComponentType<UiLinkProps>) {
     typography: { fontFamily: 'var(--font-sans)' },
     components: {
       MuiButtonBase: { defaultProps: { LinkComponent: link } },
+      MuiPaper: { styleOverrides: { root: { backgroundImage: 'none' } } },
+      MuiDialog: { styleOverrides: { paper: { border: `1px solid ${token('line')}`, backgroundColor: token('surface') } } },
+      MuiPopover: { styleOverrides: { paper: { border: `1px solid ${token('line')}`, backgroundColor: token('surface') } } },
       MuiSwitch: { styleOverrides: { switchBase: { color: token('muted') } } },
     },
   });
