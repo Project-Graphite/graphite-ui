@@ -13,7 +13,7 @@ export function Tabs({ items, label }: { items: TabItem[]; label: string }) {
   return (
     <MuiTabs
       aria-label={label}
-      className="border-b border-line"
+      className="page-tabs border-b border-line"
       role="navigation"
       scrollButtons="auto"
       value={items.find((item) => item.active)?.href ?? false}

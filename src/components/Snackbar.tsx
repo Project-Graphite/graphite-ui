@@ -1,5 +1,5 @@
 import MuiButton from '@mui/material/Button';
-import Grow from '@mui/material/Grow';
+import Fade from '@mui/material/Fade';
 import SnackbarContent from '@mui/material/SnackbarContent';
 import {
   createContext,
@@ -43,7 +43,7 @@ function SnackbarItem({ onDismiss, snack }: { onDismiss: (id: number) => void; s
   }, [leave, leaving, paused, snack.tone]);
 
   return (
-    <Grow appear in={!leaving} onExited={() => onDismiss(snack.id)}>
+    <Fade appear in={!leaving} onExited={() => onDismiss(snack.id)}>
       <SnackbarContent
         action={
           <>
@@ -80,7 +80,7 @@ function SnackbarItem({ onDismiss, snack }: { onDismiss: (id: number) => void; s
         onMouseLeave={() => setPaused(false)}
         role={snack.tone === 'error' ? 'alert' : 'none'}
       />
-    </Grow>
+    </Fade>
   );
 }
 

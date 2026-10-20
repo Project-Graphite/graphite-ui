@@ -22,6 +22,7 @@ export { Menu, type MenuItem } from './components/Menu.js';
 export { Meter } from './components/Meter.js';
 export { OutageGate } from './components/OutageGate.js';
 export { PageHeader } from './components/PageHeader.js';
+export { PageTransition } from './components/PageTransition.js';
 export { Pagination } from './components/Pagination.js';
 export { PickerField } from './components/PickerField.js';
 export { Popover } from './components/Popover.js';

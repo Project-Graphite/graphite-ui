@@ -62,6 +62,7 @@ export function AppShell({
 }) {
   const Link = useLink();
   const [collapsed, setCollapsed] = useState(storedCollapsed);
+  const activeTab = tabs.findIndex((tab) => tab.active);
   const toggle = () => {
     setCollapsed(!collapsed);
     storeCollapsed(!collapsed);
@@ -73,7 +74,7 @@ export function AppShell({
         <a className="skip-link" href="#content">
           Skip to content
         </a>
-        <header className="sticky top-0 z-20 h-(--header-height) border-b border-line-soft bg-paper/90 pr-[env(safe-area-inset-right)] pl-[env(safe-area-inset-left)] backdrop-blur-md">
+        <header className="app-header sticky top-0 z-20 h-(--header-height) border-b bg-paper/90 pr-[env(safe-area-inset-right)] pl-[env(safe-area-inset-left)] backdrop-blur-md">
           <div className={sidebar ? 'shell-bar flex h-full items-center gap-2' : 'shell flex h-full items-center gap-6'}>
             {sidebar && (
               <IconButton
@@ -134,9 +135,10 @@ export function AppShell({
           aria-label="Main"
           className="tab-bar md:hidden"
           component="nav"
+          data-active={activeTab >= 0}
           showLabels
-          style={{ '--tab-count': tabs.length } as CSSProperties}
-          value={tabs.find((tab) => tab.active)?.href ?? null}
+          style={{ '--tab-count': tabs.length, '--tab-index': activeTab } as CSSProperties}
+          value={tabs[activeTab]?.href ?? null}
         >
           {tabs.map((tab) =>
             tab.loading ? (
