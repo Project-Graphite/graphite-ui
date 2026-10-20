@@ -1,3 +1,4 @@
+import Fade from '@mui/material/Fade';
 import { createTheme, type Shadows } from '@mui/material/styles';
 import type { ComponentType } from 'react';
 import type { UiLinkProps } from './UiProvider.js';
@@ -5,6 +6,10 @@ import type { UiLinkProps } from './UiProvider.js';
 const token = (name: string) => `var(--color-${name})`;
 const panel = { border: `1px solid ${token('line')}`, backgroundColor: token('surface'), boxShadow: 'var(--shadow-popover)' };
 const hovered = { backgroundColor: token('line-soft'), color: token('ink') };
+const pressable = (transitions: string) => ({
+  transition: `${transitions}, scale 160ms var(--ease-settle)`,
+  '@media (prefers-reduced-motion: no-preference)': { '&:active': { scale: '0.97' } },
+});
 const notice = (tone: string) => ({
   border: `1px solid color-mix(in srgb, ${token(tone)} 45%, ${token('line')})`,
   borderLeft: `3px solid ${token(tone)}`,
@@ -41,12 +46,14 @@ export function createGraphiteTheme(link: ComponentType<UiLinkProps>) {
     },
     shadows: Array(25).fill('none') as Shadows,
     shape: { borderRadius: 8 },
+    transitions: { duration: { enteringScreen: 220, leavingScreen: 160 } },
     typography: { fontFamily: 'var(--font-sans)' },
     components: {
       MuiButtonBase: { defaultProps: { LinkComponent: link } },
       MuiButton: {
         defaultProps: { disableElevation: true },
         styleOverrides: {
+          root: pressable('background-color 160ms ease, border-color 160ms ease, color 160ms ease'),
           contained: {
             '&.MuiButton-colorPrimary:hover': { backgroundColor: '#fff' },
             '&.MuiButton-colorError:hover': { backgroundColor: `color-mix(in srgb, ${token('danger')} 80%, #fff)` },
@@ -55,7 +62,10 @@ export function createGraphiteTheme(link: ComponentType<UiLinkProps>) {
           text: { color: token('muted'), '&:hover': { backgroundColor: 'transparent', color: token('ink') } },
         },
       },
-      MuiIconButton: { styleOverrides: { root: { color: token('muted'), '&:hover': hovered } } },
+      MuiIconButton: {
+        styleOverrides: { root: { ...pressable('background-color 160ms ease, color 160ms ease'), color: token('muted'), '&:hover': hovered } },
+      },
+      MuiChip: { styleOverrides: { clickable: pressable('background-color 160ms ease, border-color 160ms ease') } },
       MuiOutlinedInput: {
         styleOverrides: {
           root: {
@@ -71,7 +81,11 @@ export function createGraphiteTheme(link: ComponentType<UiLinkProps>) {
       MuiFormHelperText: { styleOverrides: { root: { color: token('faint'), '&.Mui-error': { color: token('danger') } } } },
       MuiSelect: { styleOverrides: { icon: { color: token('muted') } } },
       MuiPaper: { styleOverrides: { root: { backgroundImage: 'none' } } },
-      MuiPopover: { styleOverrides: { paper: { ...panel, borderRadius: 'var(--radius-panel)' } } },
+      MuiPopover: {
+        defaultProps: { slots: { transition: Fade } },
+        styleOverrides: { paper: { ...panel, borderRadius: 'var(--radius-panel)' } },
+      },
+      MuiMenu: { defaultProps: { slots: { transition: Fade } } },
       MuiMenuItem: {
         styleOverrides: {
           root: {

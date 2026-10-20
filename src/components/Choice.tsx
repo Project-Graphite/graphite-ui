@@ -1,7 +1,7 @@
 import MuiCheckbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import MuiRadio from '@mui/material/Radio';
-import type { InputHTMLAttributes, ReactNode } from 'react';
+import { useState, type InputHTMLAttributes, type ReactNode } from 'react';
 
 type ChoiceProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'> & { label?: ReactNode };
 
@@ -18,14 +18,19 @@ function Choice({
   ...input
 }: ChoiceProps & { kind: 'checkbox' | 'radio' }) {
   const Control = kind === 'checkbox' ? MuiCheckbox : MuiRadio;
+  const [pressed, setPressed] = useState(false);
   const control = (
     <Control
       checked={checked}
       className={label ? undefined : className}
+      data-pressed={pressed || undefined}
       defaultChecked={defaultChecked}
       disabled={disabled}
       name={name}
-      onChange={onChange}
+      onChange={(event) => {
+        setPressed(true);
+        onChange?.(event);
+      }}
       size="small"
       slotProps={{ input }}
       value={value}

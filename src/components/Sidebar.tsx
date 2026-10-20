@@ -1,5 +1,5 @@
 import ListItemButton from '@mui/material/ListItemButton';
-import type { ReactNode } from 'react';
+import { useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { useLink } from '../UiProvider.js';
 import { useShell } from './AppShell.js';
 import { Icon, type IconName } from './Icon.js';
@@ -36,8 +36,18 @@ export function Sidebar({
 }) {
   const Link = useLink();
   const { collapsed } = useShell();
+  const nav = useRef<HTMLElement>(null);
+  const [current, setCurrent] = useState<{ height: number; top: number }>();
+
+  useLayoutEffect(() => {
+    const item = nav.current?.querySelector<HTMLElement>('.sidebar-item[aria-current="page"]');
+    const next = item ? { height: item.offsetHeight, top: item.offsetTop } : undefined;
+    setCurrent((shown) => (shown && next && shown.top === next.top && shown.height === next.height ? shown : next));
+  }, [collapsed, loading, sections]);
+
   return (
-    <nav aria-busy={loading || undefined} aria-label={label} className="sidebar" data-collapsed={collapsed}>
+    <nav aria-busy={loading || undefined} aria-label={label} className="sidebar" data-collapsed={collapsed} ref={nav}>
+      {current && <span aria-hidden="true" className="sidebar-indicator" style={{ height: current.height, translate: `0 ${current.top}px` }} />}
       {loading
         ? Array.from({ length: 3 }, (_, section) => (
             <div aria-hidden="true" className="grid gap-0.5" key={section}>
