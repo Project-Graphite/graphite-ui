@@ -26,6 +26,7 @@ const paths = {
   'heading-2': 'M4 6v12M12 6v12M4 12h8M16.5 10a2 2 0 1 1 3.5 1.5L16 18h5',
   highlight: 'm9 11-6 6v3h9l3-3M22 12l-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4',
   home: 'M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z',
+  info: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 11v5M12 7.5h.01',
   italic: 'M19 4h-9M14 20H5M15 4 9 20',
   key: 'M14.5 12.5a4.5 4.5 0 1 0-4-4L3 16v4h4v-2h2v-2h2l1.5-1.5M16 8h.01',
   library: 'M5 4h3v16H5zM10 4h3v16h-3zM15.2 4.6l2.9-.8 3.5 15.6-2.9.8z',
@@ -65,7 +66,7 @@ export type IconName = keyof typeof paths;
 export function Icon({ name, size = 20 }: { name: IconName; size?: number }) {
   return (
     <svg aria-hidden="true" fill="none" height={size} viewBox="0 0 24 24" width={size}>
-      <path d={paths[name]} stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={name === 'more' ? 2.6 : 1.8} />
+      <path d={paths[name]} stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={name === 'more' ? 2.6 : 1.75} />
     </svg>
   );
 }

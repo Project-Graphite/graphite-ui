@@ -1,4 +1,5 @@
-import MuiButton, { type ButtonProps as MuiButtonProps } from '@mui/material/Button';
+import MuiBadge from '@mui/material/Badge';
+import MuiButton,{ type ButtonProps as MuiButtonProps } from '@mui/material/Button';
 import MuiIconButton, { type IconButtonProps as MuiIconButtonProps } from '@mui/material/IconButton';
 import { Icon, type IconName } from './Icon.js';
 
@@ -20,13 +21,20 @@ export function Button({
 }
 
 export function IconButton({
+  badge,
   icon,
   label,
   ...props
-}: Omit<MuiIconButtonProps, 'aria-label' | 'children'> & { icon: IconName; label: string }) {
+}: Omit<MuiIconButtonProps, 'aria-label' | 'children'> & { badge?: number; icon: IconName; label: string }) {
   return (
     <MuiIconButton aria-label={label} title={label} {...props}>
-      <Icon name={icon} size={18} />
+      {badge ? (
+        <MuiBadge badgeContent={badge} color="primary" max={99}>
+          <Icon name={icon} size={18} />
+        </MuiBadge>
+      ) : (
+        <Icon name={icon} size={18} />
+      )}
     </MuiIconButton>
   );
 }

@@ -47,18 +47,28 @@ import { AppShell, Dialog, TextField, Toggle } from '@project-graphite/ui';
 
 - **`theme.css`**:
   - colour, font, radius, shadow and easing tokens;
+  - a type scale (`text-display`, `text-title`, `text-h2`, `text-h3`, `text-body`, `text-small`,
+    `text-micro`), page widths (`max-w-narrow`, `max-w-default`, `max-w-wide`), the `raised`,
+    `overlay` and `highlight` colours and `rounded-mark`;
+  - spacing, control, row-height, duration and z-index variables (`--space-*`, `--control-*`,
+    `--touch`, `--row-height`, `--duration-*`, `--z-*`);
   - base form styles, the focus ring and scrollbars;
   - motion that only runs when reduced motion isn't requested;
-  - the `shell`, `page-title`, `mono-sm` and `rule-link` utilities;
-  - generic component classes such as `primary-button`, `tab-link`, `popover-panel` and `tab-bar`.
+  - the `shell`, `page-title`, `page-heading` and `mono-sm` utilities;
+  - component classes such as `panel-rows`, `panel-row`, `form-panel`, `chip-row`, `tab-bar` and
+    `skeleton`.
 - **Components**:
-  - layout: `AppShell` (with an optional `Sidebar` and `useShell`), `PageHeader`, `Tabs`;
-  - dialogs and popups: `Dialog`, `ConfirmDialog`, `CommandPalette`, `Popover`, `Menu`;
+  - layout: `AppShell` (with an optional `Sidebar` and `useShell`), `PageHeader`,
+    `PageActionsRow`, `SectionHeading`, `Tabs`, `Card`, `ListRow`;
+  - dialogs and popups: `Dialog`, `Sheet`, `ConfirmDialog`, `CommandPalette`, `Popover`, `Menu`,
+    `FloatingToolbar` (with `ToolbarButton` and `ToolbarSeparator`);
   - forms: `TextField`, `TextAreaField`, `SuggestField`, `Select`, `DatePicker`, `TimePicker`,
-    `CodeInput`, `Toggle`, `ColorSwatches`, `GridListbox`;
-  - display: `TagChip` (with `tagColors`), `Avatar`, `Meter`, `EmptyState`, `ErrorState`,
-    `Pagination`, `SmoothImage`, the skeletons and `Placeholder`, `Icon`;
-  - feedback: `SnackbarProvider` (with `useSnackbar`), `OutageGate`.
+    `CodeInput`, `Toggle`, `ColorSwatches`, `GridListbox`, `Fieldset`, `SegmentedControl`;
+  - display: `TagChip` (with `tagColors`), `FilterChip`, `Badge`, `Kbd`, `Stat` (in a
+    `StatGrid`), `Avatar`, `Meter`, `EmptyState` (`page`, `section`, `filtered` and `widget`
+    variants), `ErrorState`, `Pagination`, `SmoothImage`, the skeletons and `Placeholder`, `Icon`,
+    `TextLink`;
+  - feedback: `Banner`, `SnackbarProvider` (with `useSnackbar`), `OutageGate`.
 - **Helpers**: `errorMessage`, `isAbortError`, `timeAgo`, `formatDay`, `useDismiss`, `useDelayed`,
   `useSettled` (with `placeholderDelayMs` and `placeholderMinimumMs`), `useLink`, and
   `useCommandShortcut` (opens the command palette on Ctrl+K or Cmd+K).
