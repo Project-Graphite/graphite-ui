@@ -44,7 +44,7 @@ export function Dialog({
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
             {eyebrow && <p className="eyebrow mb-2">{eyebrow}</p>}
-            <h2 className="m-0 text-xl font-medium" id={titleId}>
+            <h2 className="m-0 text-h2" id={titleId}>
               {title}
             </h2>
           </div>

@@ -1,6 +1,4 @@
-import Alert from '@mui/material/Alert';
-import Badge from '@mui/material/Badge';
-import MuiLink from '@mui/material/Link';
+import MuiBadge from '@mui/material/Badge';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -9,7 +7,10 @@ import { createRoot } from 'react-dom/client';
 import {
   AppShell,
   Avatar,
+  Badge,
+  Banner,
   Button,
+  Card,
   Checkbox,
   CodeInput,
   ColorSwatches,
@@ -19,21 +20,32 @@ import {
   Dialog,
   EmptyState,
   ErrorState,
+  Fieldset,
+  FilterChip,
+  FloatingToolbar,
   FormPanelSkeleton,
   GridListbox,
   Icon,
   IconButton,
+  Kbd,
   LinesSkeleton,
+  ListRow,
   ListSkeleton,
   Menu,
   Meter,
   OutageGate,
+  PageActionsRow,
   PageHeader,
   Pagination,
   Popover,
   Radio,
+  SectionHeading,
+  SegmentedControl,
   Sidebar,
   Select,
+  Sheet,
+  Stat,
+  StatGrid,
   SuggestField,
   SmoothImage,
   SnackbarProvider,
@@ -42,8 +54,11 @@ import {
   tagColors,
   TextAreaField,
   TextField,
+  TextLink,
   TimePicker,
   Toggle,
+  ToolbarButton,
+  ToolbarSeparator,
   timeAgo,
   UiProvider,
   useCommandShortcut,
@@ -107,6 +122,11 @@ function Preview() {
   useCommandShortcut(openPalette);
   const [checked, setChecked] = useState(true);
   const [page, setPage] = useState(3);
+  const [sheet, setSheet] = useState(false);
+  const [view, setView] = useState<'list' | 'board' | 'calendar'>('list');
+  const [filter, setFilter] = useState('all');
+  const [marks, setMarks] = useState<string[]>(['bold']);
+  const toggleMark = (mark: string) => setMarks((current) => (current.includes(mark) ? current.filter((item) => item !== mark) : [...current, mark]));
 
   return (
     <AppShell
@@ -115,9 +135,9 @@ function Preview() {
           <Popover
             label="Notifications"
             trigger={
-              <Badge badgeContent={2} color="primary">
+              <MuiBadge badgeContent={2} color="primary">
                 <Icon name="bell" />
-              </Badge>
+              </MuiBadge>
             }
             triggerLabel="Notifications, 2 unread"
           >
@@ -203,13 +223,11 @@ function Preview() {
           <Button icon="trash" variant="danger">
             Delete
           </Button>
-          <MuiLink href="#buttons" underline="always">
-            rule link
-          </MuiLink>
+          <TextLink href="#buttons">text link</TextLink>
+
           <IconButton icon="filter" label="Filter" />
-          <Badge badgeContent={3} color="primary">
-            <IconButton icon="filter" label="Filter, 3 active" />
-          </Badge>
+          <IconButton badge={3} icon="filter" label="Filter, 3 active" />
+
         </div>
         <div className="flex gap-4">
           {icons.map((name) => (
@@ -287,8 +305,16 @@ function Preview() {
             <Meter label="Half way" value={0.5} />
             <Meter label="Over budget" value={1.2} />
           </div>
-          <Alert severity="info">A notice explains something calmly.</Alert>
-          <Alert severity="error">Something went wrong. Try again.</Alert>
+          <Banner>A notice explains something calmly.</Banner>
+          <Banner title="Saved" tone="success">Your changes are live.</Banner>
+          <Banner action={<Button size="small">Reconnect</Button>} tone="warning">
+            Your phone stopped sending messages.
+          </Banner>
+          <Banner tone="danger">Something went wrong. Try again.</Banner>
+          <Fieldset hint="Pick as many as apply." legend="Follow these habits">
+            <Checkbox defaultChecked label="Read" name="habit" value="read" />
+            <Checkbox label="Walk" name="habit" value="walk" />
+          </Fieldset>
         </div>
       </Section>
 
@@ -300,6 +326,7 @@ function Preview() {
         {dialog === 'plain' && (
           <Dialog onClose={() => setDialog(null)} title="A plain dialog">
             <p className="mt-4 text-muted">On a phone this opens as a bottom sheet.</p>
+            <TextField autoFocus label="Title" />
           </Dialog>
         )}
         {dialog === 'confirm' && (
@@ -367,6 +394,134 @@ function Preview() {
             query={query}
           />
         )}
+      </Section>
+
+      <Section title="Type scale">
+        <p className="m-0 text-display">Display 2.25rem</p>
+        <p className="m-0 text-title">Title 1.5rem</p>
+        <p className="m-0 text-h2">Heading 2 1.125rem</p>
+        <p className="m-0 text-h3">Heading 3 0.9375rem</p>
+        <p className="m-0 text-body">Body 0.9375rem for running text and list titles.</p>
+        <p className="m-0 text-small text-muted">Small 0.8125rem for metadata lines.</p>
+        <p className="m-0 font-mono text-micro text-faint">Micro 0.75rem for keys and codes</p>
+      </Section>
+
+      <Section title="Page frame">
+        <div className="grid gap-8 rounded-card border border-dashed border-line p-4">
+          <PageActionsRow
+            actions={
+              <>
+                <IconButton icon="more" label="More actions" />
+                <Button icon="plus" size="small" variant="primary">
+                  New task
+                </Button>
+              </>
+            }
+            tabs={[
+              { active: true, href: '#page-frame', label: 'Open' },
+              { active: false, href: '#page-frame-done', label: 'Done' },
+            ]}
+            title="Tasks"
+            toolbar={
+              <>
+                {['all', 'today', 'work'].map((name, index) => (
+                  <FilterChip active={filter === name} count={[12, 3, 5][index]} key={name} label={name} onClick={() => setFilter(name)} />
+                ))}
+                <FilterChip active={false} color="teal" label="home" onClick={() => {}} />
+              </>
+            }
+            toolbarEnd={
+              <SegmentedControl
+                label="View"
+                onChange={setView}
+                options={[
+                  { icon: 'list', label: 'List', value: 'list' },
+                  { icon: 'board', label: 'Board', value: 'board' },
+                  { hideLabel: true, icon: 'calendar', label: 'Calendar', value: 'calendar' },
+                ]}
+                value={view}
+              />
+            }
+          />
+          <SectionHeading action={<Button size="small">Show all</Button>} description="Due in the next seven days." title="This week" />
+          <ul className="panel-rows">
+            <ListRow lead={<input aria-label="Done" type="checkbox" />} meta="Today · Work" title="Send the invoice" trail={<Badge tone="danger">Overdue</Badge>} />
+            <ListRow href="#page-frame" lead={<Icon name="file" size={18} />} meta="Edited 2 hours ago" title="A linked row opens a page" trail={<Kbd>⏎</Kbd>} />
+            <ListRow lead={<Icon name="wallet" size={18} />} meta="CIB · ••4512" onClick={() => setSheet(true)} selected title="A button row opens a sheet" trail={<span className="tabular-nums text-ink">EGP 1,250.00</span>} />
+            <ListRow dense meta="Dense rows are 40 px" title="A dense row" />
+          </ul>
+          <SectionHeading level={3} title="Level three heading" />
+          <StatGrid>
+            <Stat label="Spent this month" value="EGP 12,480" />
+            <Stat delta="−8%" deltaTone="good" detail="Budget EGP 20,000" label="Left" meter={<Meter label="Budget used" value={0.62} />} value="EGP 7,520" />
+            <Stat delta="+3 today" label="To review" value="5" />
+          </StatGrid>
+          <div className="grid gap-3 sm:grid-cols-3">
+            <Card>A card with medium padding.</Card>
+            <Card padding="sm">A small card.</Card>
+            <Card href="#page-frame">An interactive card link.</Card>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge>muted</Badge>
+            <Badge tone="ink">ink</Badge>
+            <Badge icon="alert" tone="danger">
+              Overdue
+            </Badge>
+            <Badge tone="live">live</Badge>
+            <Badge tone="wip">in progress</Badge>
+            <Badge tone="highlight">highlight</Badge>
+            <span className="text-small text-muted">
+              Press <Kbd>Ctrl</Kbd> <Kbd>K</Kbd> to search
+            </span>
+          </div>
+          <FloatingToolbar label="Format text">
+            <ToolbarButton active={marks.includes('bold')} icon="bold" label="Bold" onClick={() => toggleMark('bold')} />
+            <ToolbarButton active={marks.includes('italic')} icon="italic" label="Italic" onClick={() => toggleMark('italic')} />
+            <ToolbarButton icon="code" label="Code" onClick={() => toggleMark('code')} />
+            <ToolbarSeparator />
+            <ToolbarButton icon="link" label="Link" onClick={() => {}} />
+            <ToolbarButton label="Turn into" onClick={() => {}}>
+              Text
+              <Icon name="chevron-down" size={16} />
+            </ToolbarButton>
+            <ToolbarButton disabled icon="highlight" label="Highlight" onClick={() => {}} />
+          </FloatingToolbar>
+          <Button className="w-fit" onClick={() => setSheet(true)}>
+            Open a sheet
+          </Button>
+          {sheet && (
+            <Sheet
+              eyebrow="Task"
+              footer={
+                <>
+                  <Button onClick={() => setSheet(false)}>Cancel</Button>
+                  <Button onClick={() => setSheet(false)} variant="primary">
+                    Save
+                  </Button>
+                </>
+              }
+              onClose={() => setSheet(false)}
+              title="Send the invoice"
+            >
+              <div className="grid gap-5">
+                <TextField defaultValue="Send the invoice" label="Title" />
+                <TextAreaField label="Description" rows={4} />
+                <p className="m-0 text-small text-muted">On a phone this opens from the bottom; on a desktop it slides in from the right.</p>
+              </div>
+            </Sheet>
+          )}
+        </div>
+      </Section>
+
+      <Section title="Empty states">
+        <EmptyState action={<Button icon="plus" variant="primary">New page</Button>} icon="file" title="No pages yet" variant="page">
+          Pages hold notes, plans and meeting minutes.
+        </EmptyState>
+        <EmptyState title="Nothing due this week">Tasks with a due date show up here.</EmptyState>
+        <EmptyState action={<Button size="small" variant="text">Clear filters</Button>} title="No tasks match these filters" variant="filtered" />
+        <Card>
+          <EmptyState action={<Button size="small" variant="text">Add</Button>} icon="target" title="No goals yet" variant="widget" />
+        </Card>
       </Section>
 
       <Section title="Snackbar">
