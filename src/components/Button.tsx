@@ -25,7 +25,7 @@ export function IconButton({
   icon,
   label,
   ...props
-}: Omit<MuiIconButtonProps, 'aria-label' | 'children'> & { badge?: number; icon: IconName; label: string }) {
+}: Omit<MuiIconButtonProps, 'aria-label' | 'children'> & { badge?: number; href?: string; icon: IconName; label: string }) {
   return (
     <MuiIconButton aria-label={label} title={label} {...props}>
       {badge ? (
