@@ -1349,7 +1349,6 @@ body {
   .page-actions-row > .page-tabs {
     min-width: 0;
     flex: 1;
-    border-bottom: 0;
   }
 
   .page-actions-row:has(> .page-tabs) > .page-actions-end {
@@ -1467,6 +1466,10 @@ body {
     border-top: 1px solid var(--color-line-soft);
     padding: var(--space-3) var(--space-6) max(var(--space-3), env(safe-area-inset-bottom));
   }
+}
+
+.page-actions-row > .page-tabs {
+  border-bottom-width: 0;
 }
 
 ::view-transition-old(root),
