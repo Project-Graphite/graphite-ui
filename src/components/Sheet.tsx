@@ -1,6 +1,7 @@
 import Drawer from '@mui/material/Drawer';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useId, type ReactNode } from 'react';
+import { OverlayContext } from '../lib/overlay.js';
 import { IconButton } from './Button.js';
 
 export function Sheet({
@@ -50,8 +51,10 @@ export function Sheet({
           <IconButton icon="x" label="Close" onClick={onClose} />
         </div>
       </div>
-      <div className="sheet-body">{children}</div>
-      {footer && <div className="sheet-foot">{footer}</div>}
+      <OverlayContext.Provider value>
+        <div className="sheet-body">{children}</div>
+        {footer && <div className="sheet-foot">{footer}</div>}
+      </OverlayContext.Provider>
     </Drawer>
   );
 }

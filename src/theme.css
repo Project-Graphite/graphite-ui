@@ -109,43 +109,45 @@ body {
   padding-right: 0 !important;
 }
 
-@supports (-moz-appearance: none) {
-  * {
-    scrollbar-color: var(--color-line) transparent;
-    scrollbar-width: thin;
+@media (pointer: fine) {
+  @supports (-moz-appearance: none) {
+    * {
+      scrollbar-color: var(--color-line) transparent;
+      scrollbar-width: thin;
+    }
+
+    .sidebar-panel:not(:hover, :focus-within) {
+      scrollbar-color: transparent transparent;
+    }
   }
 
-  .sidebar-panel:not(:hover, :focus-within) {
-    scrollbar-color: transparent transparent;
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
   }
-}
 
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
+  ::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
 
-::-webkit-scrollbar-track,
-::-webkit-scrollbar-corner {
-  background: transparent;
-}
+  ::-webkit-scrollbar-button {
+    display: none;
+  }
 
-::-webkit-scrollbar-button {
-  display: none;
-}
+  ::-webkit-scrollbar-thumb {
+    border: 3px solid transparent;
+    border-radius: 999px;
+    background: var(--color-line) padding-box;
+  }
 
-::-webkit-scrollbar-thumb {
-  border: 3px solid transparent;
-  border-radius: 999px;
-  background: var(--color-line) padding-box;
-}
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-muted);
+  }
 
-::-webkit-scrollbar-thumb:hover {
-  background-color: var(--color-muted);
-}
-
-.sidebar-panel:not(:hover, :focus-within)::-webkit-scrollbar-thumb {
-  background-color: transparent;
+  .sidebar-panel:not(:hover, :focus-within)::-webkit-scrollbar-thumb {
+    background-color: transparent;
+  }
 }
 
 body {

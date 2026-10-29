@@ -1,5 +1,6 @@
 import MuiTextField, { type TextFieldProps } from '@mui/material/TextField';
 import type { InputHTMLAttributes, ReactNode, TextareaHTMLAttributes } from 'react';
+import { useFieldAutoFocus } from '../lib/overlay.js';
 
 export interface TriggerLook {
   quiet?: boolean;
@@ -53,10 +54,10 @@ function fieldProps({
   };
 }
 
-export function TextField({ type, ...props }: InputHTMLAttributes<HTMLInputElement> & FieldText) {
-  return <MuiTextField {...fieldProps(props)} type={type} />;
+export function TextField({ autoFocus, type, ...props }: InputHTMLAttributes<HTMLInputElement> & FieldText) {
+  return <MuiTextField {...fieldProps({ ...props, autoFocus: useFieldAutoFocus(autoFocus) })} type={type} />;
 }
 
-export function TextAreaField({ rows, ...props }: TextareaHTMLAttributes<HTMLTextAreaElement> & FieldText) {
-  return <MuiTextField {...fieldProps(props)} minRows={rows} multiline />;
+export function TextAreaField({ autoFocus, rows, ...props }: TextareaHTMLAttributes<HTMLTextAreaElement> & FieldText) {
+  return <MuiTextField {...fieldProps({ ...props, autoFocus: useFieldAutoFocus(autoFocus) })} minRows={rows} multiline />;
 }
