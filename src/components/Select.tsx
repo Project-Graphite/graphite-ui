@@ -3,6 +3,7 @@ import MenuItem from '@mui/material/MenuItem';
 import MuiTextField, { type TextFieldProps } from '@mui/material/TextField';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import type { TriggerLook } from './Field.js';
+import { Icon } from './Icon.js';
 
 export interface SelectOption<T extends string = string> {
   value: T;
@@ -19,6 +20,14 @@ function OptionContent({ option }: { option: SelectOption }) {
       <span className="min-w-0 flex-1 truncate">{option.label}</span>
       {option.hint && <span className="text-sm text-muted">{option.hint}</span>}
     </>
+  );
+}
+
+function SelectIcon({ className }: { className?: string }) {
+  return (
+    <span className={`flex ${className ?? ''}`}>
+      <Icon name="chevron-down" size={18} />
+    </span>
   );
 }
 
@@ -101,6 +110,7 @@ export function Select<T extends string = string>({
           onInputChange={(_, text) => setQuery(text)}
           openOnFocus
           options={options}
+          popupIcon={<Icon name="chevron-down" size={18} />}
           ref={root}
           renderInput={(params) => (
             <MuiTextField {...params} {...field} fullWidth placeholder={placeholder} slotProps={{ ...params.slotProps, htmlInput: { ...params.slotProps.htmlInput, 'aria-label': ariaLabel } }} />
@@ -130,6 +140,7 @@ export function Select<T extends string = string>({
         inputLabel: placeholder ? { shrink: true } : undefined,
         select: {
           displayEmpty: Boolean(placeholder),
+          IconComponent: SelectIcon,
           renderValue: () =>
             selected ? (
               <span className="flex min-w-0 items-center gap-2">

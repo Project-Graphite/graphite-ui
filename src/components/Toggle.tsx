@@ -20,10 +20,10 @@ export function Toggle({
       className={`toggle-row ${disabled ? 'opacity-55' : ''}`}
     >
       <span>
-        <span className="block font-medium" id={labelId}>
+        <span className="block" id={labelId}>
           {label}
         </span>
-        {description && <span className="text-sm text-muted">{description}</span>}
+        {description && <span className="text-small text-muted">{description}</span>}
       </span>
       <Switch
         checked={checked}

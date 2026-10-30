@@ -54,6 +54,7 @@ export function createGraphiteTheme(link: ComponentType<UiLinkProps>) {
         defaultProps: { disableElevation: true },
         styleOverrides: {
           root: pressable('background-color 160ms ease, border-color 160ms ease, color 160ms ease'),
+          sizeMedium: { minHeight: '2.25rem', lineHeight: '1.5rem' },
           contained: {
             '&.MuiButton-colorPrimary:hover': { backgroundColor: '#fff' },
             '&.MuiButton-colorError:hover': { backgroundColor: `color-mix(in srgb, ${token('danger')} 80%, #fff)` },
@@ -63,9 +64,17 @@ export function createGraphiteTheme(link: ComponentType<UiLinkProps>) {
         },
       },
       MuiIconButton: {
-        styleOverrides: { root: { ...pressable('background-color 160ms ease, color 160ms ease'), color: token('muted'), '&:hover': hovered } },
+        styleOverrides: {
+          root: { ...pressable('background-color 160ms ease, color 160ms ease'), color: token('muted'), '&:hover': hovered },
+          sizeMedium: { padding: '0.5625rem' },
+        },
       },
-      MuiChip: { styleOverrides: { clickable: pressable('background-color 160ms ease, border-color 160ms ease') } },
+      MuiChip: {
+        styleOverrides: {
+          clickable: pressable('background-color 160ms ease, border-color 160ms ease'),
+          outlined: { borderColor: token('line') },
+        },
+      },
       MuiOutlinedInput: {
         styleOverrides: {
           root: {
@@ -79,7 +88,7 @@ export function createGraphiteTheme(link: ComponentType<UiLinkProps>) {
       },
       MuiInputLabel: { styleOverrides: { root: { color: token('muted'), '&.Mui-focused': { color: token('ink') } } } },
       MuiFormHelperText: { styleOverrides: { root: { color: token('faint'), '&.Mui-error': { color: token('danger') } } } },
-      MuiSelect: { styleOverrides: { icon: { color: token('muted') } } },
+      MuiSelect: { styleOverrides: { icon: { top: 'calc(50% - 0.5625rem)', color: token('muted') } } },
       MuiPaper: { styleOverrides: { root: { backgroundImage: 'none' } } },
       MuiPopover: {
         defaultProps: { slots: { transition: Fade } },
@@ -145,6 +154,7 @@ export function createGraphiteTheme(link: ComponentType<UiLinkProps>) {
             '&:hover': hovered,
             '&.Mui-selected, &.Mui-selected:hover': { backgroundColor: token('ink'), color: token('paper') },
           },
+          sizeSmall: { minHeight: '2.25rem', paddingBlock: '0.3125rem' },
         },
       },
       MuiAlert: {
