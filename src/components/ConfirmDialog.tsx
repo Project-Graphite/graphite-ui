@@ -1,6 +1,6 @@
-import Alert from '@mui/material/Alert';
 import { useState, type ReactNode } from 'react';
 import { errorMessage } from '../lib/errors.js';
+import { Banner } from './Banner.js';
 import { Button } from './Button.js';
 import { Dialog } from './Dialog.js';
 
@@ -46,9 +46,9 @@ export function ConfirmDialog({
     <Dialog eyebrow={eyebrow} onClose={onClose} title={title}>
       <div className="mt-5 grid gap-3 text-sm text-muted">{children}</div>
       {error && (
-        <Alert className="mt-5" severity="error">
+        <Banner className="mt-5" tone="danger">
           {error}
-        </Alert>
+        </Banner>
       )}
       <div className="mt-6 flex justify-end gap-3">
         <Button disabled={busy} onClick={onClose}>

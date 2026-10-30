@@ -154,7 +154,8 @@ body {
   margin: 0;
   min-width: 320px;
   background: var(--color-paper);
-  line-height: 1.55;
+  font-size: var(--text-body);
+  line-height: var(--text-body--line-height);
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
 }
@@ -1030,9 +1031,12 @@ body {
   }
 
   .list-row-meta {
+    overflow: hidden;
     color: var(--color-muted);
     font-size: var(--text-small);
     line-height: var(--text-small--line-height);
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .panel-rows > .list-row:first-child {
@@ -1206,6 +1210,7 @@ body {
 
   .empty-state[data-variant='widget'] {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: flex-start;
     gap: var(--space-2);
@@ -1252,7 +1257,9 @@ body {
   }
 
   .empty-state[data-variant='widget'] .empty-state-action {
+    flex-shrink: 0;
     margin: 0 0 0 auto;
+    white-space: nowrap;
   }
 
   .fieldset {
